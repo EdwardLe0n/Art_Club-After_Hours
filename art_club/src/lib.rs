@@ -15,6 +15,8 @@ use managers::entity_manager::EntityManager;
 use managers::component_manager::ComponentManager;
 use managers::scene_manager::SceneManager;
 
+use managers::time_manager::TimeManager;
+
 // Community work/manager imports
 use managers::particlemanager::ParticleManager;
 
@@ -33,6 +35,8 @@ struct GameState {
     pub entity_manager : EntityManager,
     pub component_manager : ComponentManager,
     pub render_manager : Vec<Vec<usize>>,
+
+    pub time_manager : TimeManager,
 
     // Community integrated work/managers
 
@@ -58,6 +62,8 @@ impl GameState {
             entity_manager : EntityManager::new(),
             component_manager : ComponentManager::new(),
             render_manager : Vec::with_capacity(10),
+
+            time_manager : TimeManager::new(),
             
             // Community integrated work/managers
 
@@ -73,6 +79,10 @@ impl GameState {
 
     fn update(&mut self) {
 
+        // Updates the time every frame
+
+        self.time_manager.update();
+
         // Checks the scene state before continuing
 
         self.check_scene_state();
@@ -80,6 +90,10 @@ impl GameState {
         // From here TurbECS will run it's lifetime functions!
 
         self.run_lifetime();
+
+        // renders the 'time' since last frame
+
+        self.time_manager.render();
 
     }
 }

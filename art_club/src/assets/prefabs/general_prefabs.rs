@@ -31,7 +31,7 @@ pub fn new_title () -> (Entity, VecDeque<Component>) {
     
     ent.set_layer(10);
 
-    let mut text_box = TextBoxComponent::new("TurbECS".to_string());
+    let mut text_box = TextBoxComponent::new("Art Club : After Hours".to_string());
 
     text_box.font = "large".to_string();
     text_box.color = 0xff0000ff;

@@ -4,7 +4,9 @@ use turbo::*;
 
 use crate::{turbecs, GameState};
 
-use turbecs::managers::scene_manager;
+use turbecs::managers;
+
+use managers::{scene_manager, time_manager};
 
 use turbecs::entity::Entity;
 
