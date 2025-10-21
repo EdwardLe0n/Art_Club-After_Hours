@@ -8,7 +8,7 @@ use turbecs::component_system::component::Component;
 
 use crate::assets;
 
-use assets::prefabs::{general_prefabs};
+use assets::prefabs::{general_prefabs, character_prefabs};
 
 #[turbo::serialize]
 #[derive(Copy, PartialEq)]
@@ -69,6 +69,8 @@ pub fn make_misc_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
     let mut ent_vec = VecDeque::new();
 
     ent_vec.push_back(general_prefabs::new_to_title());
+
+    ent_vec.push_back(character_prefabs::new_local_player());
 
     return ent_vec;
 
