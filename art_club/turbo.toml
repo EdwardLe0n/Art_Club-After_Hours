@@ -1,0 +1,8 @@
+name = "turbe"
+version = "0.1.0"
+description = "A entity component system with lifecycles meant to be pried open and used by developers!"
+authors = ["Edward Leon"]
+
+[canvas]
+width = 256
+height = 256
