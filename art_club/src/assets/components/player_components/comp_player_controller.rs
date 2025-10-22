@@ -40,7 +40,7 @@ impl PlayerControllerComponent {
 
         // Handles vertical movement
 
-        if p1_gamepad.up.pressed() {
+        if state.input_manager.up.pressed() {
             moov_vec.1 += self.player_speed;
         }
 

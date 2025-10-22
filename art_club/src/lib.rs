@@ -16,6 +16,7 @@ use managers::component_manager::ComponentManager;
 use managers::scene_manager::SceneManager;
 
 use managers::time_manager::TimeManager;
+use managers::input_manager::InputManager;
 
 // Community work/manager imports
 use managers::particlemanager::ParticleManager;
@@ -37,6 +38,7 @@ struct GameState {
     pub render_manager : Vec<Vec<usize>>,
 
     pub time_manager : TimeManager,
+    pub input_manager : InputManager,
 
     // Community integrated work/managers
 
@@ -64,6 +66,7 @@ impl GameState {
             render_manager : Vec::with_capacity(10),
 
             time_manager : TimeManager::new(),
+            input_manager : InputManager::new(),
             
             // Community integrated work/managers
 
@@ -83,6 +86,10 @@ impl GameState {
 
         self.time_manager.update();
 
+        // Gathers the inputs every frame
+
+        self.input_manager.update();
+
         // Checks the scene state before continuing
 
         self.check_scene_state();
@@ -94,6 +101,10 @@ impl GameState {
         // renders the 'time' since last frame
 
         self.time_manager.render();
+
+        // Renders the controls to the player
+
+        self.input_manager.render();
 
     }
 }
