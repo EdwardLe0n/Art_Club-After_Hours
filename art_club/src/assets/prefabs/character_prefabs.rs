@@ -10,6 +10,11 @@ use component::{Component, ComponentData};
 // various component imports
 use components::{comp_spr::SpriteComponent};
 
+// Non-core components
+use assets::components::{player_components};
+
+use player_components::comp_player_controller::PlayerControllerComponent;
+
 pub fn new_local_player () -> (Entity, VecDeque<Component>) {
 
     let mut ent = Entity::new_base("Player".to_string());
@@ -19,13 +24,26 @@ pub fn new_local_player () -> (Entity, VecDeque<Component>) {
 
     let mut some_sprite = SpriteComponent::new("smile".to_string());
     
-    some_sprite.transform.set_width(32);
-    some_sprite.transform.set_height(32);
+    let sprite_size = 32;
+
+    some_sprite.transform.set_width(sprite_size);
+    some_sprite.transform.set_height(sprite_size);
+
+    some_sprite.transform.nudge_x(-sprite_size/2);
+    some_sprite.transform.nudge_y(sprite_size/2);
 
     ent_queue.push_back(
         Component::new(
             ComponentData::Sprite(
                 some_sprite
+            )
+        )
+    );
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::PlayerController(
+                PlayerControllerComponent::new()
             )
         )
     );

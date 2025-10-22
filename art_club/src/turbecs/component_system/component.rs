@@ -16,11 +16,13 @@ use components::{comp_text_box::TextBoxComponent, comp_butn::ButtonComponent, co
 // User made components
 use crate::assets;
 
-use assets::components::{misc_components};
+use assets::components::{misc_components, player_components};
 
 use misc_components::{comp_resizer::ResizerComponent, comp_textbox_resizer::TextBoxResizerComponent};
 use misc_components::{comp_text_box_filler::TextBoxFillerComponent};
 use misc_components::{comp_fade::FadeComponent};
+
+use player_components::comp_player_controller::PlayerControllerComponent;
 
 #[turbo::serialize]
 #[derive(PartialEq)]
@@ -47,6 +49,8 @@ pub enum ComponentData {
     TextBoxResizer (TextBoxResizerComponent),
     Fade (FadeComponent),
     TextBoxFiller (TextBoxFillerComponent),
+
+    PlayerController (PlayerControllerComponent),
 }
 
 impl Component {
@@ -162,6 +166,10 @@ impl Component {
 
             ComponentData::Fade(fade_component) => {
                 fade_component.update(ent, state);
+            },
+
+            ComponentData::PlayerController(pc_component) => {
+                pc_component.update(ent, state);
             },
             
             _default => {}            

@@ -67,6 +67,10 @@ impl Component {
 
             // Core functionality
             ComponentData::Button(_) => {self.has.has_update = true;},
+
+            // Extra bits
+
+            ComponentData::PlayerController(_) => {self.has.has_update = true;},
             
             _default => {}
         }

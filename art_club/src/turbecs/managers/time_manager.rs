@@ -12,10 +12,10 @@ pub struct TimeManager {
 
     last_time : u64,
     curr_time : u64,
-    delta : f32,
-    time_scale : f32,
-    delta_scaled : f32,
-    frames_per_second : i32,
+    pub delta : f32,
+    pub time_scale : f32,
+    pub delta_scaled : f32,
+    pub frames_per_second : i32,
 
 }
 
