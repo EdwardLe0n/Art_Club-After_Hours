@@ -63,13 +63,32 @@ impl PlayerControllerComponent {
         ent.transform.nudge_x((moov_vec.0 * state.time_manager.delta) as i32);
         ent.transform.nudge_y((moov_vec.1 * state.time_manager.delta) as i32);
         
+        self.handle_camera(ent);
+
+    }
+
+    fn handle_camera(&mut self, ent : &mut Entity) {
+
         /*
         * Frame by frame camera movement
         */
 
+        // creates a bounding box of sorts
+        let cam_box = 0.5;
+
+        // if checks if the player is within the box
+        // if they are, then the camera won't move
+        if (
+            (camera::x() - (ent.transform.get_x() as f32)).abs() < cam_box
+            ) && (
+            (camera::y() - (ent.transform.get_y() as f32)).abs() < cam_box
+        ) {
+            return;
+        }
+
         // Weight vars for calculation (sum must equal up to 1.0)
-        let cam_weight = 0.9;
-        let player_weight = 0.1;
+        let cam_weight = 0.95;
+        let player_weight = 1.0 - cam_weight;
 
         camera::set_xy(
             (camera::x() * cam_weight + (ent.transform.get_x() as f32) * player_weight),

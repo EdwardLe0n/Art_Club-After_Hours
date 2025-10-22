@@ -42,6 +42,12 @@ impl SceneManager {
 
 pub fn make_scene (some_scene : Scenes) ->  VecDeque<(Entity, VecDeque<Component>)>{
 
+    // Will always reset the camera location when make scene is called
+
+    camera::set_xy(0, 0);
+
+    // Then the scene data will be pulled
+
     match some_scene {
         Scenes::Title => {return make_title_scene()},
         Scenes::Misc => {return make_misc_scene()},
