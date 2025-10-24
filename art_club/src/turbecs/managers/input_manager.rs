@@ -2,7 +2,7 @@ use turbo::*;
 use crate::{turbecs};
 
 use turbecs::managers::input_system;
-use input_system::{input_actions::InputAction, input_states::InputStates};
+use input_system::{input_actions::InputAction, input_render_pair::InputRenderPair};
 
 const BUTTON_SIZE : i32 = 20; 
 const BUTTON_OFFSET : i32 = 4;
@@ -17,7 +17,10 @@ pub struct InputManager {
 
     pub mobile : bool,
 
-    pub up : InputAction
+    pub up : InputAction,
+    pub left : InputAction,
+    pub down : InputAction,
+    pub right : InputAction,
 
 }
 
@@ -25,10 +28,13 @@ impl InputManager {
     
     pub fn new() -> Self {
         return Self {
-            mobile: false,
+            mobile: true,
 
             // All button types
             up : InputAction::new(),
+            left : InputAction::new(),
+            down : InputAction::new(),
+            right : InputAction::new(),
 
         };
     }
@@ -38,6 +44,8 @@ impl InputManager {
 impl InputManager {
 
     pub fn update(&mut self) {
+
+        self.update_button_states();
 
         if self.mobile {
             self.check_mobile();
@@ -54,59 +62,53 @@ impl InputManager {
             return;
         }
 
-
-        rect!(
-            x = BUTTON_OFFSET,
-            y = (screen().h() as i32) - BUTTON_SIZE - BUTTON_OFFSET,
-            w = BUTTON_SIZE,
-            h = BUTTON_SIZE,
-            color = BUTTON_COLOR,
-            rotation = 0,
-            border_size = BUTTN_BORDER_SIZE,
-            border_color = BUTTN_BORDER_COLOR,
-            border_radius = BUTTN_BORDER_RADIUS,
-            fixed = true
+        self.up.render_w_mobile(
+            BUTTON_OFFSET * 2 + BUTTON_SIZE,
+            (screen().h() as i32) + (-BUTTON_SIZE - BUTTON_OFFSET) * 2,
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+            BUTTON_COLOR,
+            BUTTN_BORDER_SIZE,
+            BUTTN_BORDER_COLOR,
+            BUTTN_BORDER_RADIUS,
+            InputRenderPair::Letter("w".to_string())
         );
 
-        rect!(
-            x = BUTTON_OFFSET * 2 + BUTTON_SIZE,
-            y = (screen().h() as i32) + (-BUTTON_SIZE - BUTTON_OFFSET) * 2,
-            w = BUTTON_SIZE,
-            h = BUTTON_SIZE,
-            color = BUTTON_COLOR,
-            rotation = 0,
-            border_size = BUTTN_BORDER_SIZE,
-            border_color = BUTTN_BORDER_COLOR,
-            border_radius = BUTTN_BORDER_RADIUS,
-            fixed = true
+        self.left.render_w_mobile(
+            BUTTON_OFFSET,
+            (screen().h() as i32) - BUTTON_SIZE - BUTTON_OFFSET,
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+            BUTTON_COLOR,
+            BUTTN_BORDER_SIZE,
+            BUTTN_BORDER_COLOR,
+            BUTTN_BORDER_RADIUS,
+            InputRenderPair::Letter("a".to_string())
         );
 
-        rect!(
-            x = BUTTON_OFFSET * 2 + BUTTON_SIZE,
-            y = (screen().h() as i32) - BUTTON_SIZE - BUTTON_OFFSET,
-            w = BUTTON_SIZE,
-            h = BUTTON_SIZE,
-            color = BUTTON_COLOR,
-            rotation = 0,
-            border_size = BUTTN_BORDER_SIZE,
-            border_color = BUTTN_BORDER_COLOR,
-            border_radius = BUTTN_BORDER_RADIUS,
-            fixed = true
+        self.down.render_w_mobile(
+            BUTTON_OFFSET * 2 + BUTTON_SIZE,
+            (screen().h() as i32) + (-BUTTON_SIZE - BUTTON_OFFSET),
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+            BUTTON_COLOR,
+            BUTTN_BORDER_SIZE,
+            BUTTN_BORDER_COLOR,
+            BUTTN_BORDER_RADIUS,
+            InputRenderPair::Letter("s".to_string())
         );
 
-        rect!(
-            x = BUTTON_OFFSET * 3 + BUTTON_SIZE * 2,
-            y = (screen().h() as i32) - BUTTON_SIZE - BUTTON_OFFSET,
-            w = BUTTON_SIZE,
-            h = BUTTON_SIZE,
-            color = BUTTON_COLOR,
-            rotation = 0,
-            border_size = BUTTN_BORDER_SIZE,
-            border_color = BUTTN_BORDER_COLOR,
-            border_radius = BUTTN_BORDER_RADIUS,
-            fixed = true
+        self.right.render_w_mobile(
+            BUTTON_OFFSET * 3 + BUTTON_SIZE * 2,
+            (screen().h() as i32) + (-BUTTON_SIZE - BUTTON_OFFSET),
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+            BUTTON_COLOR,
+            BUTTN_BORDER_SIZE,
+            BUTTN_BORDER_COLOR,
+            BUTTN_BORDER_RADIUS,
+            InputRenderPair::Letter("d".to_string())
         );
-
 
     }
 
@@ -117,23 +119,19 @@ impl InputManager {
     fn update_button_states(&mut self) {
 
         self.up.update_state();
+        self.left.update_state();
+        self.down.update_state();
+        self.right.update_state();
 
     }
 
     fn check_other(&mut self) {
         let p1_gamepad = gamepad::get(0);
 
-        if p1_gamepad.up.pressed() {
-
-            if !self.up.pressed() {
-                self.up.turn_to_pressed();
-            }
-
-        }
-        else if p1_gamepad.up.just_released() {
-            self.up.turn_to_released();
-        }
-            
+        self.up.update_w_gamepad(p1_gamepad.up as u32);
+        self.left.update_w_gamepad(p1_gamepad.left as u32);
+        self.down.update_w_gamepad(p1_gamepad.down as u32);
+        self.right.update_w_gamepad(p1_gamepad.right as u32);
 
     }
 
@@ -143,32 +141,39 @@ impl InputManager {
 
         // up check
 
-        if (screen_pointer.intersects(
-            BUTTON_OFFSET * 2 + BUTTON_SIZE, 
-            (screen().h() as i32) + (-BUTTON_SIZE - BUTTON_OFFSET) * 2, 
-            BUTTON_SIZE, 
-            BUTTON_SIZE)
-        ) {
+        self.up.update_w_mobile(
+            &screen_pointer,
+            BUTTON_OFFSET * 2 + BUTTON_SIZE,
+            (screen().h() as i32) + (-BUTTON_SIZE - BUTTON_OFFSET) * 2,
+            BUTTON_SIZE, BUTTON_SIZE
+        );
 
-            if screen_pointer.pressed() {
+        // left check
 
-                if !self.up.pressed() {
-                    self.up.turn_to_pressed();
-                }
+        self.left.update_w_mobile(
+            &screen_pointer,
+            BUTTON_OFFSET,
+            (screen().h() as i32) + (-BUTTON_SIZE - BUTTON_OFFSET),
+            BUTTON_SIZE, BUTTON_SIZE
+        );
 
-            }
-            else if screen_pointer.just_released() {
-                self.up.turn_to_released();
-            }
+        // down check
 
-        }
+        self.down.update_w_mobile(
+            &screen_pointer,
+            BUTTON_OFFSET * 2 + BUTTON_SIZE,
+            (screen().h() as i32) + (-BUTTON_SIZE - BUTTON_OFFSET),
+            BUTTON_SIZE, BUTTON_SIZE
+        );
 
-        // if screen_pointer.intersects(50, 30, 100, 20) {
-        //     // Pointer is over the rectangle in screen coordinates
-        // }
-        // if screen_pointer.intersects(50, 30, 100, 20) && screen_pointer.just_pressed() {
-        //     // Pointer just clicked/tapped the rectangle in screen coordinates
-        // }
+        // right check
+
+        self.right.update_w_mobile(
+            &screen_pointer,
+            BUTTON_OFFSET * 3 + BUTTON_SIZE * 2,
+            (screen().h() as i32) + (-BUTTON_SIZE - BUTTON_OFFSET),
+            BUTTON_SIZE, BUTTON_SIZE
+        );
 
     }
 }

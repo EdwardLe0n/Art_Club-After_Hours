@@ -34,8 +34,6 @@ impl PlayerControllerComponent {
 
     pub fn handle_movement (&mut self, ent : &mut Entity, state : &mut GameState) {
 
-        let p1_gamepad = gamepad::get(0);
-
         let mut moov_vec = (0.0, 0.0);
 
         // Handles vertical movement
@@ -44,17 +42,17 @@ impl PlayerControllerComponent {
             moov_vec.1 += self.player_speed;
         }
 
-        if p1_gamepad.down.pressed() {
+        if state.input_manager.down.pressed() {
             moov_vec.1 -= self.player_speed;
         }
 
         // Handles horizontal movement
 
-        if p1_gamepad.right.pressed() {
+        if state.input_manager.right.pressed() {
             moov_vec.0 += self.player_speed;
         }
 
-        if p1_gamepad.left.pressed() {
+        if state.input_manager.left.pressed() {
             moov_vec.0 -= self.player_speed;
         }
 
