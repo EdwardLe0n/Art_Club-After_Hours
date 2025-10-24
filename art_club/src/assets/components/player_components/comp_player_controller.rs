@@ -38,21 +38,21 @@ impl PlayerControllerComponent {
 
         // Handles vertical movement
 
-        if state.input_manager.up.pressed() {
+        if state.input_manager.p1.up.pressed() {
             moov_vec.1 += self.player_speed;
         }
 
-        if state.input_manager.down.pressed() {
+        if state.input_manager.p1.down.pressed() {
             moov_vec.1 -= self.player_speed;
         }
 
         // Handles horizontal movement
 
-        if state.input_manager.right.pressed() {
+        if state.input_manager.p1.right.pressed() {
             moov_vec.0 += self.player_speed;
         }
 
-        if state.input_manager.left.pressed() {
+        if state.input_manager.p1.left.pressed() {
             moov_vec.0 -= self.player_speed;
         }
 
