@@ -82,13 +82,14 @@ impl Component {
         match &self.component_data {
 
             // Core functionality
-            ComponentData::Button(_)        => {self.has.has_render = true;},
-            ComponentData::Text(_)          => {self.has.has_render = true;},
-            ComponentData::TextBox(_)       => {self.has.has_render = true;},
-            ComponentData::Sprite(_)        => {self.has.has_render = true;},
-            ComponentData::Rectangle(_)     => {self.has.has_render = true;},
+            ComponentData::Button(_)            => {self.has.has_render = true;},
+            ComponentData::Text(_)              => {self.has.has_render = true;},
+            ComponentData::TextBox(_)           => {self.has.has_render = true;},
+            ComponentData::Sprite(_)            => {self.has.has_render = true;},
+            ComponentData::Rectangle(_)         => {self.has.has_render = true;},
 
             // Extra functionality
+            ComponentData::PlayerRenderer(_)    => {self.has.has_render = true;},
             
             _default => {}
         }

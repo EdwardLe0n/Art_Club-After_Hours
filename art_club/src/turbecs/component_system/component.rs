@@ -23,6 +23,7 @@ use misc_components::{comp_text_box_filler::TextBoxFillerComponent};
 use misc_components::{comp_fade::FadeComponent};
 
 use player_components::comp_player_controller::PlayerControllerComponent;
+use player_components::comp_player_renderer::PlayerRendererComponent;
 
 #[turbo::serialize]
 #[derive(PartialEq)]
@@ -51,6 +52,7 @@ pub enum ComponentData {
     TextBoxFiller (TextBoxFillerComponent),
 
     PlayerController (PlayerControllerComponent),
+    PlayerRenderer (PlayerRendererComponent)
 }
 
 impl Component {
@@ -200,7 +202,9 @@ impl Component {
 
             // User made components
 
-            
+            ComponentData::PlayerRenderer ( plyr_render_component) => {
+                plyr_render_component.render(_transform);
+            },
 
             // Space for edge case
 

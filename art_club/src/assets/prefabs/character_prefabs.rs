@@ -14,6 +14,7 @@ use components::{comp_spr::SpriteComponent};
 use assets::components::{player_components};
 
 use player_components::comp_player_controller::PlayerControllerComponent;
+use player_components::comp_player_renderer::PlayerRendererComponent;
 
 pub fn new_local_player () -> (Entity, VecDeque<Component>) {
 
@@ -22,20 +23,10 @@ pub fn new_local_player () -> (Entity, VecDeque<Component>) {
     
     ent.set_layer(1);
 
-    let mut some_sprite = SpriteComponent::new("smile".to_string());
-    
-    let sprite_size = 32;
-
-    some_sprite.transform.set_width(sprite_size);
-    some_sprite.transform.set_height(sprite_size);
-
-    some_sprite.transform.nudge_x(-sprite_size/2);
-    some_sprite.transform.nudge_y(sprite_size/2);
-
     ent_queue.push_back(
         Component::new(
-            ComponentData::Sprite(
-                some_sprite
+            ComponentData::PlayerRenderer(
+                PlayerRendererComponent::new()
             )
         )
     );
