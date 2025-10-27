@@ -127,6 +127,7 @@ impl InputAction {
     pub fn pressed(&self) -> bool {
 
         if self.state == InputStates::Pressed || self.state == InputStates::JustPressed {
+
             return true;
         }
 

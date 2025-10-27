@@ -22,6 +22,14 @@ pub struct InputManager {
     pub down : InputAction,
     pub right : InputAction,
 
+    pub a : InputAction,
+    pub b : InputAction,
+    pub x : InputAction,
+    pub y : InputAction,
+
+    pub select : InputAction,
+    pub start : InputAction,
+
 }
 
 impl InputManager {
@@ -35,6 +43,14 @@ impl InputManager {
             left : InputAction::new(),
             down : InputAction::new(),
             right : InputAction::new(),
+
+            a : InputAction::new(),
+            b : InputAction::new(),
+            x : InputAction::new(),
+            y : InputAction::new(),
+
+            select : InputAction::new(),
+            start : InputAction::new()
 
         };
     }
@@ -110,6 +126,81 @@ impl InputManager {
             InputRenderPair::Letter("d".to_string())
         );
 
+        // main non - wasd buttons 
+
+        self.a.render_w_mobile(
+            screen().w() as i32 - (BUTTON_OFFSET + BUTTON_SIZE) * 2,
+            (screen().h() as i32) - BUTTON_SIZE - BUTTON_OFFSET,
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+            BUTTON_COLOR,
+            BUTTN_BORDER_SIZE,
+            BUTTN_BORDER_COLOR,
+            BUTTN_BORDER_RADIUS,
+            InputRenderPair::Letter("a".to_string())
+        );
+
+        self.b.render_w_mobile(
+            screen().w() as i32 - (BUTTON_OFFSET + BUTTON_SIZE),
+            (screen().h() as i32) + ((- BUTTON_SIZE - BUTTON_OFFSET) as f32 * 1.5) as i32,
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+            BUTTON_COLOR,
+            BUTTN_BORDER_SIZE,
+            BUTTN_BORDER_COLOR,
+            BUTTN_BORDER_RADIUS,
+            InputRenderPair::Letter("b".to_string())
+        );
+
+        self.y.render_w_mobile(
+            screen().w() as i32 - (BUTTON_OFFSET + BUTTON_SIZE) * 2,
+            (screen().h() as i32)  + (- BUTTON_SIZE - BUTTON_OFFSET) * 2,
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+            BUTTON_COLOR,
+            BUTTN_BORDER_SIZE,
+            BUTTN_BORDER_COLOR,
+            BUTTN_BORDER_RADIUS,
+            InputRenderPair::Letter("y".to_string())
+        );
+
+        self.x.render_w_mobile(
+            screen().w() as i32 - (BUTTON_OFFSET + BUTTON_SIZE) * 3,
+            (screen().h() as i32) + ((- BUTTON_SIZE - BUTTON_OFFSET) as f32 * 1.5) as i32,
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+            BUTTON_COLOR,
+            BUTTN_BORDER_SIZE,
+            BUTTN_BORDER_COLOR,
+            BUTTN_BORDER_RADIUS,
+            InputRenderPair::Letter("x".to_string())
+        );
+
+        self.select.render_w_mobile(
+            (screen().w() / 2) as i32 - (BUTTON_OFFSET + BUTTON_SIZE * 2),
+            BUTTON_SIZE / 8,
+            BUTTON_SIZE * 2,
+            BUTTON_SIZE,
+            BUTTON_COLOR,
+            BUTTN_BORDER_SIZE,
+            BUTTN_BORDER_COLOR,
+            BUTTN_BORDER_RADIUS,
+            InputRenderPair::Letter("slct".to_string())
+        );
+
+        self.start.render_w_mobile(
+            (screen().w() / 2) as i32 + (BUTTON_OFFSET),
+            BUTTON_SIZE / 8,
+            BUTTON_SIZE * 2,
+            BUTTON_SIZE,
+            BUTTON_COLOR,
+            BUTTN_BORDER_SIZE,
+            BUTTN_BORDER_COLOR,
+            BUTTN_BORDER_RADIUS,
+            InputRenderPair::Letter("strt".to_string())
+        );
+
+
     }
 
 }
@@ -123,6 +214,14 @@ impl InputManager {
         self.down.update_state();
         self.right.update_state();
 
+        self.a.update_state();
+        self.b.update_state();
+        self.x.update_state();
+        self.y.update_state();
+
+        self.select.update_state();
+        self.start.update_state();
+
     }
 
     fn check_other(&mut self) {
@@ -132,6 +231,14 @@ impl InputManager {
         self.left.update_w_gamepad(p1_gamepad.left as u32);
         self.down.update_w_gamepad(p1_gamepad.down as u32);
         self.right.update_w_gamepad(p1_gamepad.right as u32);
+
+        self.a.update_w_gamepad(p1_gamepad.a as u32);
+        self.b.update_w_gamepad(p1_gamepad.b as u32);
+        self.x.update_w_gamepad(p1_gamepad.x as u32);
+        self.y.update_w_gamepad(p1_gamepad.y as u32);
+
+        self.select.update_w_gamepad(p1_gamepad.select as u32);
+        self.start.update_w_gamepad(p1_gamepad.start as u32);
 
     }
 
@@ -173,6 +280,57 @@ impl InputManager {
             BUTTON_OFFSET * 3 + BUTTON_SIZE * 2,
             (screen().h() as i32) + (-BUTTON_SIZE - BUTTON_OFFSET),
             BUTTON_SIZE, BUTTON_SIZE
+        );
+
+
+        // non wasd inputs
+
+        self.a.update_w_mobile(
+            &screen_pointer,
+            screen().w() as i32 - (BUTTON_OFFSET + BUTTON_SIZE) * 2,
+            (screen().h() as i32) - BUTTON_SIZE - BUTTON_OFFSET,
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+        );
+
+        self.b.update_w_mobile(
+            &screen_pointer,
+            screen().w() as i32 - (BUTTON_OFFSET + BUTTON_SIZE),
+            (screen().h() as i32) + ((- BUTTON_SIZE - BUTTON_OFFSET) as f32 * 1.5) as i32,
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+        );
+
+        self.y.update_w_mobile(
+            &screen_pointer,
+            screen().w() as i32 - (BUTTON_OFFSET + BUTTON_SIZE) * 2,
+            (screen().h() as i32)  + (- BUTTON_SIZE - BUTTON_OFFSET) * 2,
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+        );
+
+        self.x.update_w_mobile(
+            &screen_pointer,
+            screen().w() as i32 - (BUTTON_OFFSET + BUTTON_SIZE) * 3,
+            (screen().h() as i32) + ((- BUTTON_SIZE - BUTTON_OFFSET) as f32 * 1.5) as i32,
+            BUTTON_SIZE,
+            BUTTON_SIZE,
+        );
+
+        self.select.update_w_mobile(
+            &screen_pointer,
+            (screen().w() / 2) as i32 - (BUTTON_OFFSET + BUTTON_SIZE * 2),
+            BUTTON_SIZE / 8,
+            BUTTON_SIZE * 2,
+            BUTTON_SIZE,
+        );
+
+        self.start.update_w_mobile(
+            &screen_pointer,
+            (screen().w() / 2) as i32 + (BUTTON_OFFSET),
+            BUTTON_SIZE / 8,
+            BUTTON_SIZE * 2,
+            BUTTON_SIZE,
         );
 
     }
