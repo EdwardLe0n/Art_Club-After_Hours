@@ -1,0 +1,17 @@
+use turbo::*;
+
+#[turbo::serialize]
+#[derive(PartialEq)]
+pub enum PlayerDirection {
+    Up,
+    Down,
+    Left,
+    Right
+}
+
+#[turbo::serialize]
+#[derive(PartialEq)]
+pub enum PlayerState {
+    Idle,
+    Walking
+}

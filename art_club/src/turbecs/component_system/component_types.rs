@@ -13,6 +13,8 @@ pub enum ComponentTypes {
 
     Resizer,
 
+    PlayerRenderer,
+
     // Other
 
     Other

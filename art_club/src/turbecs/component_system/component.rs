@@ -87,7 +87,9 @@ impl Component {
 
             // User made components
 
-            
+            ComponentData::PlayerRenderer(_) => {
+                return ComponentTypes::PlayerRenderer;
+            }
             
             // Edge case
 
