@@ -71,6 +71,7 @@ impl Component {
             // Extra bits
 
             ComponentData::PlayerController(_) => {self.has.has_update = true;},
+            ComponentData::PlayerRenderer(_) => {self.has.has_update = true;}
             
             _default => {}
         }

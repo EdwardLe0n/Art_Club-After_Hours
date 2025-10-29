@@ -173,6 +173,10 @@ impl Component {
             ComponentData::PlayerController(pc_component) => {
                 pc_component.update(ent, state);
             },
+
+            ComponentData::PlayerRenderer(pr_component) => {
+                pr_component.update(state);
+            }
             
             _default => {}            
         }
