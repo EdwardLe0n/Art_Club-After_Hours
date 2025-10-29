@@ -115,7 +115,7 @@ impl PlayerControllerComponent {
 
         if let ComponentData::PlayerRenderer(pr_component) = &mut state.component_manager.components[renderer_locat.1].component_data {
             
-            pr_component.curr_state = state_to_change_to;
+            pr_component.update_animation(state_to_change_to);
             
         }
 

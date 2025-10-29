@@ -8,7 +8,6 @@ use turbecs::helpers::transform::Transform;
 
 const PLAYER_HEIGHT : i32 = 24;
 const PLAYER_WIDTH : i32 = 16;
-const ANIMATION_MOD : f32 = 2.5;
 
 use assets::components::player_components::player_enums;
 use player_enums::{PlayerDirection, PlayerState};
@@ -18,7 +17,8 @@ use player_enums::{PlayerDirection, PlayerState};
 pub struct PlayerRendererComponent {
     pub direction : PlayerDirection,
     pub curr_state : PlayerState,
-    pub elapsed : f32
+    pub elapsed : f32,
+    pub state_mod : f32, 
 }
 
 impl PlayerRendererComponent {
@@ -27,7 +27,8 @@ impl PlayerRendererComponent {
         return Self {
             direction : PlayerDirection::Down,
             curr_state : PlayerState::Idle,
-            elapsed : 0.0
+            elapsed : 0.0,
+            state_mod : 1.0,
         };
     }
 
@@ -65,7 +66,7 @@ impl PlayerRendererComponent {
     
     pub fn update_time(&mut self, state : &mut GameState) {
 
-        self.elapsed += state.time_manager.delta * ANIMATION_MOD;
+        self.elapsed += state.time_manager.delta * self.state_mod;
 
         let len = self.get_animation_len();
 
@@ -120,6 +121,22 @@ impl PlayerRendererComponent {
         }
 
         return val_to_return;
+
+    }
+
+    pub fn update_animation(&mut self, some_state : PlayerState) {
+
+        self.curr_state = some_state;
+        self.update_state_speed();
+
+    }
+
+    pub fn update_state_speed(&mut self) {
+
+        match &self.curr_state {
+            PlayerState::Walking => {self.state_mod = 7.5;}
+            _default => {self.state_mod = 1.0;}
+        }
 
     }
 
