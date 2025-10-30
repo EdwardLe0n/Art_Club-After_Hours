@@ -26,6 +26,9 @@ use managers::particlemanager::ParticleManager;
 mod assets;
 use assets::game_state::{run_data::RunData};
 
+use assets::game_state;
+use game_state::online_player_manager::OnlinePlayerManager;
+use game_state::online_calls::channels::{NewOnlinePlayer, HeardOnline, PlayerJoined};
 
 #[turbo::game]
 struct GameState {
@@ -81,6 +84,21 @@ impl GameState {
     }
 
     fn update(&mut self) {
+
+        // Will move later
+        
+        if let Some(conn) = PlayerJoined::subscribe("default") {
+
+            while let Ok(msg) = conn.recv() {
+                log!("Received message from server!");
+            }
+            if self.input_manager.a.pressed() {
+                // Send a Ping message using the `ChannelConnection::send` method
+                let _ = conn.send(&NewOnlinePlayer::new());
+                log!("Sent ping to the server!");
+            }
+
+        }
 
         // Updates the time every frame
 
