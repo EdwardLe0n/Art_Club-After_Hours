@@ -36,7 +36,7 @@ impl InputManager {
     
     pub fn new() -> Self {
         return Self {
-            mobile: true,
+            mobile: false,
 
             // All button types
             up : InputAction::new(),

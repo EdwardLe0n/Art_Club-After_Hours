@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use crate::{turbecs};
 
 use turbecs::{component_system, helpers::gap_data::GapData};

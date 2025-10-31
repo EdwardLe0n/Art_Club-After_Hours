@@ -32,18 +32,18 @@ impl NewOnlinePlayer {
 #[turbo::serialize]
 pub struct HeardOnline {
 
-    playerID : String,
-    data : NewOnlinePlayer,
+    pub player_id : String,
+    pub data : NewOnlinePlayer,
 
 }
 
 impl HeardOnline {
     
-    pub fn new(id : String, someData : NewOnlinePlayer) -> Self {
+    pub fn new(id : String, some_data : NewOnlinePlayer) -> Self {
 
         return Self {
-            playerID : id,
-            data : someData
+            player_id : id,
+            data : some_data
         };
         
     }
@@ -58,8 +58,33 @@ impl ChannelHandler for PlayerJoined {
     fn new() -> Self { 
         Self
     } 
-    fn on_data(&mut self, user_id: &str, data: Self::Recv) -> Result<(), std::io::Error> { 
-        log!("Got {:?} from {:?}", data, user_id); 
-        Self::send(user_id, HeardOnline::new(user_id.to_string(), data)) 
+    fn on_data(&mut self, user_id: &str, data: Self::Recv) -> Result<(), std::io::Error> {
+        // Self::send(user_id, HeardOnline::new(user_id.to_string(), data))
+
+        Self::broadcast(HeardOnline::new(user_id.to_string(), data))
+
+    }
+}
+
+#[turbo::serialize]
+pub struct NewLocalPlayer;
+
+#[turbo::serialize]
+pub struct HeardLocal {
+
+    pub player_id : String
+
+}
+
+#[turbo::os::channel(program = "artClubManager", name = "localJoined")]
+pub struct LocalJoined;
+impl ChannelHandler for LocalJoined { 
+    type Recv = NewLocalPlayer; // incoming from client
+    type Send = HeardLocal; // outgoing to client
+    fn new() -> Self { 
+        Self
+    } 
+    fn on_data(&mut self, user_id: &str, data: Self::Recv) -> Result<(), std::io::Error> {
+        Self::send(user_id, HeardLocal{player_id : user_id.to_string()})
     }
 }

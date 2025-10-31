@@ -24,7 +24,7 @@ use managers::particlemanager::ParticleManager;
 // Game specific elements that need to be in the GameState
 
 mod assets;
-use assets::game_state::{run_data::RunData};
+use assets::game_state::{run_data::RunData, online_player_manager::OnlinePlayerManager};
 
 #[turbo::game]
 struct GameState {
@@ -46,7 +46,9 @@ struct GameState {
     // Project specific elements
 
     pub run_data : RunData,
-    pub can_interact : bool
+    pub can_interact : bool,
+
+    pub online_player_manager : OnlinePlayerManager
 
 }
 
@@ -74,7 +76,8 @@ impl GameState {
             // Project specific elements
 
             run_data : RunData::new(),
-            can_interact : true
+            can_interact : true,
+            online_player_manager : OnlinePlayerManager::new()
         }
     
     }

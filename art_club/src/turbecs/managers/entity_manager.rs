@@ -1,8 +1,12 @@
+use std::collections::VecDeque;
+
 use turbo::*;
 use crate::{turbecs, GameState};
 
 use turbecs::entity::Entity;
 use turbecs::{component_system::component_types::ComponentTypes};
+
+use turbecs::component_system::component::Component;
 
 use turbecs::helpers;
 use helpers::{gap_data::GapData, lifetime_data::LifetimeData};
@@ -204,6 +208,30 @@ impl GameState {
 
 
 impl GameState {
+
+    /// ADD TO MAIN REPO
+    
+    /// 
+    pub fn new_entity_w_comp(&mut self, ent_and_comp : &mut (Entity, VecDeque<Component>)) {
+
+        while !ent_and_comp.1.is_empty() {
+
+            ent_and_comp.0.comp_locats.push(self.component_manager.next_comp_locat().1);
+
+            self.component_manager.new_component(ent_and_comp.1.front().unwrap().clone());
+            ent_and_comp.1.pop_front();
+
+        }
+
+        for c in &ent_and_comp.0.comp_locats {
+            self.component_manager.components[*c].init_has_x();
+        }
+
+        ent_and_comp.0.init_has_x(self);
+
+        self.new_entity(&mut ent_and_comp.0);
+
+    }
 
     /// Pushes mutable entity to be instantiated at the next possible time
     pub fn new_entity(&mut self, _entity : &mut Entity) {

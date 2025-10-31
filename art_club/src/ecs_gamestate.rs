@@ -40,6 +40,9 @@ impl GameState {
         log!("number of entities: {:?}", self.entity_manager.entities.len());
         log!("number of entities to be destroyed : {:?}", self.entity_manager.lifetime_data.new_destroy.len());
 
+        // clears the online players in history
+        self.online_player_manager.online_players.clear();
+
         self.on_destroy();
 
         let mut new_ent = scene_manager::make_scene(self.scene_manager.active_scene);

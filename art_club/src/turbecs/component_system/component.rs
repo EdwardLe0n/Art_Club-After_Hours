@@ -24,6 +24,7 @@ use misc_components::{comp_fade::FadeComponent};
 
 use player_components::comp_player_controller::PlayerControllerComponent;
 use player_components::comp_player_renderer::PlayerRendererComponent;
+use player_components::comp_player_ghost::PlayerGhostComponent;
 
 #[turbo::serialize]
 #[derive(PartialEq)]
@@ -52,7 +53,8 @@ pub enum ComponentData {
     TextBoxFiller (TextBoxFillerComponent),
 
     PlayerController (PlayerControllerComponent),
-    PlayerRenderer (PlayerRendererComponent)
+    PlayerRenderer (PlayerRendererComponent),
+    PlayerGhost (PlayerGhostComponent)
 }
 
 impl Component {
@@ -125,6 +127,10 @@ impl Component {
 
             ComponentData::TextBoxFiller(tb_filler_component) => {
                 tb_filler_component.on_awake(ent, state);
+            },
+
+            ComponentData::PlayerGhost(player_ghost_component) => {
+                player_ghost_component.on_awake(ent, state);
             },
 
             // Space for edge case
