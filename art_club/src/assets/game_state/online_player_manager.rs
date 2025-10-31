@@ -10,7 +10,9 @@ use turbecs::component_system::component::ComponentData;
 use assets::game_state;
 use game_state::online_calls::channels::{NewLocalPlayer, HeardLocal, LocalJoined};
 use game_state::online_calls::channels::{OnlinePlayerData, HeardOnline, PlayerJoined};
-use game_state::online_calls::channels::{UpdatePlayer};
+use game_state::online_calls::channels::{UpdatePlayer, ExtraData};
+
+use crate::assets::components::player_components::player_enums::PlayerState;
 
 use assets::prefabs::character_prefabs;
 
@@ -198,14 +200,27 @@ impl GameState {
 
                 if let ComponentData::PlayerRenderer(player_rend_data) = player_rend.component_data {
 
-                    let _ = conn.send(
-                        &OnlinePlayerData::new_w_data(
+                    let mut data_to_send = OnlinePlayerData::new_w_data(
                             player_ent.transform.get_x(),
                             -player_ent.transform.get_y(),
                             player_rend_data.direction,
                             player_rend_data.curr_state,
                             player_rend_data.sprite
-                        )
+                        );
+
+                    if data_to_send.curr_state == PlayerState::Walking{
+
+                        data_to_send.extra = ExtraData::Movement(
+                            self.input_manager.up.pressed(),
+                            self.input_manager.down.pressed(),
+                            self.input_manager.left.pressed(),
+                            self.input_manager.right.pressed()
+                        );
+
+                    }
+
+                    let _ = conn.send(
+                        &data_to_send
                     );
 
                 }

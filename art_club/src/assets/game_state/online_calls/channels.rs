@@ -7,12 +7,19 @@ use player_components::player_enums;
 use player_enums::{PlayerDirection, PlayerState, PlayerSprite};
 
 #[turbo::serialize]
+pub enum ExtraData {
+    Movement(bool, bool, bool, bool),
+    None
+}
+
+#[turbo::serialize]
 pub struct OnlinePlayerData{
     pub x : i32,
     pub y : i32,
     pub curr_dir : PlayerDirection,
     pub curr_state : PlayerState,
-    pub curr_sprite : PlayerSprite
+    pub curr_sprite : PlayerSprite,
+    pub extra : ExtraData
 }
 
 impl OnlinePlayerData {
@@ -24,7 +31,8 @@ impl OnlinePlayerData {
             y: 0,
             curr_dir: PlayerDirection::Down,
             curr_state: PlayerState::Idle,
-            curr_sprite : PlayerSprite::Test
+            curr_sprite : PlayerSprite::Test,
+            extra : ExtraData::None
         }
 
     }
