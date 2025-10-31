@@ -15,3 +15,9 @@ pub enum PlayerState {
     Idle,
     Walking
 }
+
+#[turbo::serialize]
+#[derive(PartialEq)]
+pub enum PlayerSprite {
+    Test,
+}

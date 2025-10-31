@@ -10,13 +10,14 @@ const PLAYER_HEIGHT : i32 = 24;
 const PLAYER_WIDTH : i32 = 16;
 
 use assets::components::player_components::player_enums;
-use player_enums::{PlayerDirection, PlayerState};
+use player_enums::{PlayerDirection, PlayerState, PlayerSprite};
 
 #[turbo::serialize]
 #[derive(PartialEq)]
 pub struct PlayerRendererComponent {
     pub direction : PlayerDirection,
     pub curr_state : PlayerState,
+    pub sprite : PlayerSprite,
     pub elapsed : f32,
     pub state_mod : f32, 
 }
@@ -27,9 +28,22 @@ impl PlayerRendererComponent {
         return Self {
             direction : PlayerDirection::Down,
             curr_state : PlayerState::Idle,
+            sprite : PlayerSprite::Test,
             elapsed : 0.0,
             state_mod : 1.0,
         };
+    }
+
+    pub fn new_w_data(some_dir : PlayerDirection, some_state : PlayerState, some_sprite : PlayerSprite) -> Self {
+
+        let mut to_return = Self::new();
+
+        to_return.direction = some_dir;
+        to_return.curr_state = some_state;
+        to_return.sprite = some_sprite;
+
+        return to_return;
+
     }
 
 }

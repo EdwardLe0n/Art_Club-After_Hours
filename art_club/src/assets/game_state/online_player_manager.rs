@@ -4,9 +4,12 @@ use std::collections::HashMap;
 
 use crate::{GameState, turbecs, assets};
 
+use turbecs::component_system::component_types::ComponentTypes;
+use turbecs::component_system::component::ComponentData;
+
 use assets::game_state;
 use game_state::online_calls::channels::{NewLocalPlayer, HeardLocal, LocalJoined};
-use game_state::online_calls::channels::{NewOnlinePlayer, HeardOnline, PlayerJoined};
+use game_state::online_calls::channels::{OnlinePlayerData, HeardOnline, PlayerJoined};
 
 use assets::prefabs::character_prefabs;
 
@@ -15,6 +18,7 @@ use assets::prefabs::character_prefabs;
 pub struct OnlinePlayerManager {
 
     pub player_id : String,
+    pub player_render_locat : (usize, usize),
     pub online_players : HashMap<String, usize>
     
 }
@@ -23,6 +27,7 @@ impl OnlinePlayerManager {
     pub fn new() -> Self {
         return Self {
             player_id : "".to_string(),
+            player_render_locat : (0, 0),
             online_players : HashMap::new()
         };
     }
@@ -98,10 +103,66 @@ impl GameState {
             }
 
             if self.input_manager.a.just_pressed() {
-                let _ = conn.send(&NewOnlinePlayer::new());
+
+                if !self.check_for_local_data() {
+                    return;
+                }
+
+                let local_player = self.entity_manager.entities[self.online_player_manager.player_render_locat.0].clone();
+
+                if let ComponentData::PlayerRenderer(p_render_component) = &self.component_manager.components[self.online_player_manager.player_render_locat.1].component_data {
+                    
+                    let _ = conn.send(
+                        &OnlinePlayerData::new_w_data(
+                            local_player.transform.get_x(),
+                            local_player.transform.get_y(),
+                            p_render_component.direction.clone(),
+                            p_render_component.curr_state.clone(),
+                            p_render_component.sprite.clone()
+                        )
+                    );
+
+                }
+
             }
 
         }
+
+    }
+
+    fn check_for_local_data(&mut self) -> bool {
+
+        if self.component_manager.components.len() == 0 {
+            return false;
+        }
+
+        if self.component_manager.components[self.online_player_manager.player_render_locat.1].get_comp_type() == ComponentTypes::PlayerRenderer {
+            
+            if self.component_manager.components[self.online_player_manager.player_render_locat.1].active {
+                return true;
+            }
+            
+        }
+
+        let local_player = self.find_w_component(ComponentTypes::PlayerController);
+
+        if !local_player.0 {
+            return false;
+        }
+
+        self.online_player_manager.player_render_locat.0 = local_player.1;
+
+        let local_player_ent = self.entity_manager.entities[local_player.1].clone();
+
+        let local_render = local_player_ent.find_component_in_state(ComponentTypes::PlayerRenderer, self);
+
+        if !local_render.0 {
+            return false;
+        }
+
+        self.online_player_manager.player_render_locat.1 = local_render.1;
+
+        return true;
 
     }
 
@@ -109,7 +170,7 @@ impl GameState {
 
         log!("Trying to make a new player");
         
-        self.new_entity_w_comp(&mut character_prefabs::new_online_player(some_data.player_id.clone()));
+        self.new_entity_w_comp(&mut character_prefabs::new_online_player(some_data.clone()));
 
     }
 

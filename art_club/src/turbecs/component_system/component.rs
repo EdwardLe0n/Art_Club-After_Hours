@@ -92,6 +92,10 @@ impl Component {
             ComponentData::PlayerRenderer(_) => {
                 return ComponentTypes::PlayerRenderer;
             }
+
+            ComponentData::PlayerController(_) => {
+                return ComponentTypes::PlayerController;
+            }
             
             // Edge case
 

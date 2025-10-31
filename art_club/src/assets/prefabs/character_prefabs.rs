@@ -17,6 +17,8 @@ use player_components::comp_player_controller::PlayerControllerComponent;
 use player_components::comp_player_renderer::PlayerRendererComponent;
 use player_components::comp_player_ghost::PlayerGhostComponent;
 
+use assets::game_state::online_calls::channels::HeardOnline;
+
 pub fn new_local_player () -> (Entity, VecDeque<Component>) {
 
     let mut ent = Entity::new_base("Player".to_string());
@@ -44,17 +46,24 @@ pub fn new_local_player () -> (Entity, VecDeque<Component>) {
 
 }
 
-pub fn new_online_player (some_id : String) -> (Entity, VecDeque<Component>) {
+pub fn new_online_player (some_online_info : HeardOnline) -> (Entity, VecDeque<Component>) {
 
     let mut ent = Entity::new_base("Player".to_string());
     let mut ent_queue = VecDeque::new();
+
+    ent.transform.set_x(some_online_info.data.x);
+    ent.transform.set_y(-some_online_info.data.y);
     
     ent.set_layer(1);
 
     ent_queue.push_back(
         Component::new(
             ComponentData::PlayerRenderer(
-                PlayerRendererComponent::new()
+                PlayerRendererComponent::new_w_data(
+                    some_online_info.data.curr_dir, 
+                    some_online_info.data.curr_state,
+                    some_online_info.data.curr_sprite
+                )
             )
         )
     );
@@ -62,7 +71,7 @@ pub fn new_online_player (some_id : String) -> (Entity, VecDeque<Component>) {
     ent_queue.push_back(
         Component::new(
             ComponentData::PlayerGhost(
-                PlayerGhostComponent::new(some_id)
+                PlayerGhostComponent::new(some_online_info.player_id)
             )
         )
     );

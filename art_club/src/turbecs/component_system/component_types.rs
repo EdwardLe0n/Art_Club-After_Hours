@@ -14,6 +14,7 @@ pub enum ComponentTypes {
     Resizer,
 
     PlayerRenderer,
+    PlayerController,
 
     // Other
 
