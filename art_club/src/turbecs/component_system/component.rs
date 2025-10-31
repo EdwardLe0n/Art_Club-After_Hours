@@ -96,6 +96,10 @@ impl Component {
             ComponentData::PlayerController(_) => {
                 return ComponentTypes::PlayerController;
             }
+
+            ComponentData::PlayerGhost(_) => {
+                return ComponentTypes::PlayerGhost;
+            }
             
             // Edge case
 

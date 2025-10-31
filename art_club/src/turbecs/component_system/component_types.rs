@@ -15,6 +15,7 @@ pub enum ComponentTypes {
 
     PlayerRenderer,
     PlayerController,
+    PlayerGhost,
 
     // Other
 

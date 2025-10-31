@@ -10,6 +10,7 @@ use turbecs::component_system::component::ComponentData;
 use assets::game_state;
 use game_state::online_calls::channels::{NewLocalPlayer, HeardLocal, LocalJoined};
 use game_state::online_calls::channels::{OnlinePlayerData, HeardOnline, PlayerJoined};
+use game_state::online_calls::channels::{UpdatePlayer};
 
 use assets::prefabs::character_prefabs;
 
@@ -55,6 +56,7 @@ impl GameState {
         if self.handle_is_connected() {
 
             self.handle_player_joined();
+            self.handle_update_player();
 
         }
 
@@ -115,10 +117,77 @@ impl GameState {
                     let _ = conn.send(
                         &OnlinePlayerData::new_w_data(
                             local_player.transform.get_x(),
-                            local_player.transform.get_y(),
+                            -local_player.transform.get_y(),
                             p_render_component.direction.clone(),
                             p_render_component.curr_state.clone(),
                             p_render_component.sprite.clone()
+                        )
+                    );
+
+                }
+
+            }
+
+        }
+
+    }
+
+    fn handle_update_player(&mut self) {
+
+        if let Some(conn) = UpdatePlayer::subscribe("default") {
+
+            while let Ok(msg) = conn.recv() {
+
+                if msg.player_id == self.online_player_manager.player_id {
+                    continue;
+                }
+
+                if self.online_player_manager.check_for_player(&msg.player_id) {
+                    
+                    let other_player = self.entity_manager.entities[*self.online_player_manager.online_players.get_key_value(&msg.player_id).unwrap().1].clone();
+
+                    // first check if this entity is good
+
+                    if !other_player.has_component(ComponentTypes::PlayerGhost, self) {
+                        continue;
+                    }
+
+                    // then do all le magic
+
+                    self.entity_manager.entities[other_player.locat].transform.set_x(msg.data.x);
+                    self.entity_manager.entities[other_player.locat].transform.set_y(msg.data.y);
+
+                    // add update visual logic
+
+                }
+                else {
+
+                    log!("Update Player : didn't know player existed, adding now");
+
+                    self.make_new_ghost(&msg);
+                }
+
+            }
+
+            // temp, will move later
+            if self.input_manager.b.just_pressed() {
+
+                if !self.check_for_local_data() {
+                    return;
+                }
+
+                let player_ent = self.entity_manager.entities[self.online_player_manager.player_render_locat.0].clone();
+                let player_rend = self.component_manager.components[self.online_player_manager.player_render_locat.1].clone();
+
+                if let ComponentData::PlayerRenderer(player_rend_data) = player_rend.component_data {
+
+                    let _ = conn.send(
+                        &OnlinePlayerData::new_w_data(
+                            player_ent.transform.get_x(),
+                            -player_ent.transform.get_y(),
+                            player_rend_data.direction,
+                            player_rend_data.curr_state,
+                            player_rend_data.sprite
                         )
                     );
 
@@ -141,7 +210,7 @@ impl GameState {
             if self.component_manager.components[self.online_player_manager.player_render_locat.1].active {
                 return true;
             }
-            
+
         }
 
         let local_player = self.find_w_component(ComponentTypes::PlayerController);

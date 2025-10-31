@@ -52,7 +52,7 @@ pub fn new_online_player (some_online_info : HeardOnline) -> (Entity, VecDeque<C
     let mut ent_queue = VecDeque::new();
 
     ent.transform.set_x(some_online_info.data.x);
-    ent.transform.set_y(-some_online_info.data.y);
+    ent.transform.set_y(some_online_info.data.y);
     
     ent.set_layer(1);
 

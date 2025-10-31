@@ -81,6 +81,21 @@ impl ChannelHandler for PlayerJoined {
     }
 }
 
+#[turbo::os::channel(program = "artClubManager", name = "updatePlayer")]
+pub struct UpdatePlayer;
+impl ChannelHandler for UpdatePlayer { 
+    type Recv = OnlinePlayerData; // incoming from client
+    type Send = HeardOnline; // outgoing to client
+    fn new() -> Self { 
+        Self
+    } 
+    fn on_data(&mut self, user_id: &str, data: Self::Recv) -> Result<(), std::io::Error> {
+
+        Self::broadcast(HeardOnline::new(user_id.to_string(), data))
+
+    }
+}
+
 #[turbo::serialize]
 pub struct NewLocalPlayer;
 
