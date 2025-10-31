@@ -30,17 +30,27 @@ impl NewOnlinePlayer {
 }
 
 #[turbo::serialize]
-pub struct HeardOnline;
+pub struct HeardOnline {
 
-#[turbo::serialize]
-pub struct LocalJoined {
-    pub x : i32,
-    pub y : i32,
-    pub curr_dir : PlayerDirection,
-    pub curr_state : PlayerState
+    playerID : String,
+    data : NewOnlinePlayer,
+
 }
 
-#[turbo::os::channel(program = "artClubManager", name = "main")]
+impl HeardOnline {
+    
+    pub fn new(id : String, someData : NewOnlinePlayer) -> Self {
+
+        return Self {
+            playerID : id,
+            data : someData
+        };
+        
+    }
+
+}
+
+#[turbo::os::channel(program = "artClubManager", name = "playerJoined")]
 pub struct PlayerJoined;
 impl ChannelHandler for PlayerJoined { 
     type Recv = NewOnlinePlayer; // incoming from client
@@ -50,6 +60,6 @@ impl ChannelHandler for PlayerJoined {
     } 
     fn on_data(&mut self, user_id: &str, data: Self::Recv) -> Result<(), std::io::Error> { 
         log!("Got {:?} from {:?}", data, user_id); 
-        Self::send(user_id, HeardOnline) 
-    } 
+        Self::send(user_id, HeardOnline::new(user_id.to_string(), data)) 
+    }
 }
