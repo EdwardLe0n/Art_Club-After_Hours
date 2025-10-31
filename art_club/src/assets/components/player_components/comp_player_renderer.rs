@@ -30,7 +30,7 @@ impl PlayerRendererComponent {
             curr_state : PlayerState::Idle,
             sprite : PlayerSprite::Test,
             elapsed : 0.0,
-            state_mod : 1.0,
+            state_mod : 4.0,
         };
     }
 
@@ -39,7 +39,7 @@ impl PlayerRendererComponent {
         let mut to_return = Self::new();
 
         to_return.direction = some_dir;
-        to_return.curr_state = some_state;
+        to_return.update_animation(some_state);
         to_return.sprite = some_sprite;
 
         return to_return;
