@@ -20,8 +20,9 @@ pub struct OnlinePlayerManager {
 
     pub player_id : String,
     pub player_render_locat : (usize, usize),
-    pub online_players : HashMap<String, usize>
-    
+    pub online_players : HashMap<String, usize>,
+    pub should_join : bool,
+    pub should_update : bool,
 }
 impl OnlinePlayerManager {
     
@@ -29,7 +30,9 @@ impl OnlinePlayerManager {
         return Self {
             player_id : "".to_string(),
             player_render_locat : (0, 0),
-            online_players : HashMap::new()
+            online_players : HashMap::new(),
+            should_join : false,
+            should_update : false,
         };
     }
 
@@ -104,7 +107,7 @@ impl GameState {
 
             }
 
-            if self.input_manager.a.just_pressed() {
+            if self.online_player_manager.should_join {
 
                 if !self.check_for_local_data() {
                     return;
@@ -125,6 +128,8 @@ impl GameState {
                     );
 
                 }
+
+                self.online_player_manager.should_join = false;
 
             }
 
@@ -159,6 +164,19 @@ impl GameState {
 
                     // add update visual logic
 
+                    let render_comp = other_player.find_component_in_state(ComponentTypes::PlayerRenderer, self);
+
+                    if !render_comp.0 {
+                        continue;
+                    }
+
+                    if let ComponentData::PlayerRenderer(p_render_comp_data) = &mut self.component_manager.components[render_comp.1].component_data {
+
+                        p_render_comp_data.direction = msg.data.curr_dir;
+                        p_render_comp_data.update_animation(msg.data.curr_state);
+
+                    }
+
                 }
                 else {
 
@@ -169,8 +187,7 @@ impl GameState {
 
             }
 
-            // temp, will move later
-            if self.input_manager.b.just_pressed() {
+            if self.online_player_manager.should_update {
 
                 if !self.check_for_local_data() {
                     return;
@@ -192,6 +209,8 @@ impl GameState {
                     );
 
                 }
+
+                self.online_player_manager.should_update = false;
 
             }
 

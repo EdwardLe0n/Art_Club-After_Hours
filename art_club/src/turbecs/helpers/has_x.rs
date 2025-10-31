@@ -48,7 +48,8 @@ impl Component {
             // Extra functionality
             ComponentData::TextBoxResizer(_) => {self.has.has_awake = true;},
 
-            ComponentData::PlayerGhost(_) => {self.has.has_awake = true;}
+            ComponentData::PlayerGhost(_) => {self.has.has_awake = true;},
+            ComponentData::PlayerController(_) => {self.has.has_awake = true;}
 
             _default => {}
         }

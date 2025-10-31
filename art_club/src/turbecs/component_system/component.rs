@@ -141,6 +141,10 @@ impl Component {
                 player_ghost_component.on_awake(ent, state);
             },
 
+            ComponentData::PlayerController(player_cont_component) => {
+                player_cont_component.on_awake(state);
+            },
+
             // Space for edge case
 
             _default => {}

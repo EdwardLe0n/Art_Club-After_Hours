@@ -34,6 +34,12 @@ impl PlayerControllerComponent {
 
 impl PlayerControllerComponent {
     
+    pub fn on_awake (&mut self, state : &mut GameState) {
+
+        state.online_player_manager.should_join = true;
+
+    }
+
     pub fn update (&mut self, ent : &mut Entity, state : &mut GameState) {
 
         self.handle_movement(ent, state);
@@ -115,9 +121,15 @@ impl PlayerControllerComponent {
 
         if let ComponentData::PlayerRenderer(pr_component) = &mut state.component_manager.components[renderer_locat.1].component_data {
             
+            if (pr_component.curr_state == state_to_change_to) {
+                return;
+            }
+
             pr_component.update_animation(state_to_change_to);
             
         }
+
+        state.online_player_manager.should_update = true;
 
     }
 
