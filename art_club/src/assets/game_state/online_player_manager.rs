@@ -16,6 +16,8 @@ use crate::assets::components::player_components::player_enums::PlayerState;
 
 use assets::prefabs::character_prefabs;
 
+use turbecs::managers::input_system::input_basket::InputBasket;
+
 #[turbo::serialize]
 #[derive(PartialEq)]
 pub struct OnlinePlayerManager {
@@ -179,6 +181,33 @@ impl GameState {
 
                     }
 
+                    // updates ghost component
+
+                    let ghost_comp = other_player.find_component_in_state(ComponentTypes::PlayerGhost, self);
+
+                    if !ghost_comp.0 {
+                        continue;
+                    }
+
+                    if let ComponentData::PlayerGhost(p_ghost_comp_data) = &mut self.component_manager.components[ghost_comp.1].component_data {
+
+                        match &msg.data.extra {
+
+                            ExtraData::Movement(basket) => {
+                                
+                                p_ghost_comp_data.update_basket(basket.clone());
+
+                            },
+                            _default => {
+
+                                p_ghost_comp_data.update_basket(InputBasket::new());
+
+                            }
+
+                        }
+
+                    }
+
                 }
                 else {
 
@@ -211,10 +240,7 @@ impl GameState {
                     if data_to_send.curr_state == PlayerState::Walking{
 
                         data_to_send.extra = ExtraData::Movement(
-                            self.input_manager.up.pressed(),
-                            self.input_manager.down.pressed(),
-                            self.input_manager.left.pressed(),
-                            self.input_manager.right.pressed()
+                            InputBasket::new_w_state(self)
                         );
 
                     }

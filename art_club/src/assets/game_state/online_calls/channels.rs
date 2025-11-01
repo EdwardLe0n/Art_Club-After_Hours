@@ -6,9 +6,12 @@ use assets::components::player_components;
 use player_components::player_enums;
 use player_enums::{PlayerDirection, PlayerState, PlayerSprite};
 
+use crate::turbecs::managers;
+use managers::input_system::input_basket::InputBasket;
+
 #[turbo::serialize]
 pub enum ExtraData {
-    Movement(bool, bool, bool, bool),
+    Movement(InputBasket),
     None
 }
 

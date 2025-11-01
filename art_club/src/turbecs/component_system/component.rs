@@ -196,7 +196,11 @@ impl Component {
 
             ComponentData::PlayerRenderer(pr_component) => {
                 pr_component.update(state);
-            }
+            },
+
+            ComponentData::PlayerGhost(pg_component) => {
+                pg_component.update(ent, state);
+            },
             
             _default => {}            
         }

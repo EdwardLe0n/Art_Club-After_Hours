@@ -17,7 +17,8 @@ use player_components::comp_player_controller::PlayerControllerComponent;
 use player_components::comp_player_renderer::PlayerRendererComponent;
 use player_components::comp_player_ghost::PlayerGhostComponent;
 
-use assets::game_state::online_calls::channels::HeardOnline;
+use assets::game_state::online_calls;
+use online_calls::channels::{HeardOnline, ExtraData};
 
 pub fn new_local_player () -> (Entity, VecDeque<Component>) {
 
@@ -68,13 +69,38 @@ pub fn new_online_player (some_online_info : HeardOnline) -> (Entity, VecDeque<C
         )
     );
 
-    ent_queue.push_back(
-        Component::new(
-            ComponentData::PlayerGhost(
-                PlayerGhostComponent::new(some_online_info.player_id)
-            )
-        )
-    );
+    match &some_online_info.data.extra {
+        ExtraData::Movement(input_basket) => {
+            ent_queue.push_back(
+                Component::new(
+                    ComponentData::PlayerGhost(
+                        PlayerGhostComponent::new_w_basket(
+                            some_online_info.player_id,
+                            input_basket.clone()
+                        )
+                    )
+                )
+            );
+        },
+        ExtraData::None => {
+            ent_queue.push_back(
+                Component::new(
+                    ComponentData::PlayerGhost(
+                        PlayerGhostComponent::new(some_online_info.player_id)
+                    )
+                )
+            );
+        },
+        _default => {
+            ent_queue.push_back(
+                Component::new(
+                    ComponentData::PlayerGhost(
+                        PlayerGhostComponent::new(some_online_info.player_id)
+                    )
+                )
+            );
+        }
+    }
 
     return (ent, ent_queue);
 

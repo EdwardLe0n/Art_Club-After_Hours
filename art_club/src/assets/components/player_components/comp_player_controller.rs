@@ -14,10 +14,11 @@ use assets::components::player_components;
 use player_components::comp_player_renderer::PlayerRendererComponent;
 use player_components::player_enums::{PlayerState};
 
+pub const PLAYER_SPEED : f32 = 100.0;
+
 #[turbo::serialize]
 #[derive(PartialEq)]
 pub struct PlayerControllerComponent {
-    player_speed : f32,
     past_movement : (f32, f32)
 }
 
@@ -25,7 +26,6 @@ impl PlayerControllerComponent {
 
     pub fn new() -> Self {
         return Self {
-            player_speed : 100.0,
             past_movement : (0.0, 0.0)
         };
     }
@@ -57,21 +57,21 @@ impl PlayerControllerComponent {
         // Handles vertical movement
 
         if state.input_manager.up.pressed() {
-            moov_vec.1 += self.player_speed;
+            moov_vec.1 += PLAYER_SPEED;
         }
 
         if state.input_manager.down.pressed() {
-            moov_vec.1 -= self.player_speed;
+            moov_vec.1 -= PLAYER_SPEED;
         }
 
         // Handles horizontal movement
 
         if state.input_manager.right.pressed() {
-            moov_vec.0 += self.player_speed;
+            moov_vec.0 += PLAYER_SPEED;
         }
 
         if state.input_manager.left.pressed() {
-            moov_vec.0 -= self.player_speed;
+            moov_vec.0 -= PLAYER_SPEED;
         }
 
         // moves the player based on the given inputs
@@ -81,6 +81,10 @@ impl PlayerControllerComponent {
         
         self.handle_visuals(moov_vec, ent, state);
         self.handle_camera(ent);
+
+        if self.past_movement != moov_vec {
+            state.online_player_manager.should_update = true;
+        }
 
         self.past_movement = moov_vec;
 
@@ -128,8 +132,6 @@ impl PlayerControllerComponent {
             pr_component.update_animation(state_to_change_to);
             
         }
-
-        state.online_player_manager.should_update = true;
 
     }
 
