@@ -97,12 +97,42 @@ impl PlayerRendererComponent {
         match &self.curr_state {
             PlayerState::Idle => {
 
-                
+                match &self.direction {
+                    PlayerDirection::Up => {
+                        to_return.0 = 4; 
+                    }
+                    PlayerDirection::Down => {
+                        
+                    }
+                    PlayerDirection::Left => {
+                        to_return.0 = 4;
+                        to_return.1 = 2;
+                    }
+                    PlayerDirection::Right => {
+                        to_return.1 = 2;
+                    }
+                }
 
             }
             PlayerState::Walking => {
 
                 to_return.1 = 1;
+
+                match &self.direction {
+                    PlayerDirection::Up => {
+                        to_return.0 = 4; 
+                    }
+                    PlayerDirection::Down => {
+                        
+                    }
+                    PlayerDirection::Left => {
+                        to_return.0 = 4;
+                        to_return.1 = 3;
+                    }
+                    PlayerDirection::Right => {
+                        to_return.1 = 3;
+                    }
+                }
 
             }
             _default => {}
@@ -142,6 +172,12 @@ impl PlayerRendererComponent {
 
         self.curr_state = some_state;
         self.update_state_speed();
+
+    }
+
+    pub fn update_direction(&mut self, some_dir : PlayerDirection) {
+
+        self.direction = some_dir;
 
     }
 

@@ -12,7 +12,7 @@ use component_system::component::ComponentData;
 
 use assets::components::player_components;
 use player_components::comp_player_renderer::PlayerRendererComponent;
-use player_components::player_enums::{PlayerState};
+use player_components::player_enums::{PlayerState, PlayerDirection};
 
 pub const PLAYER_SPEED : f32 = 100.0;
 
@@ -107,7 +107,7 @@ impl PlayerControllerComponent {
         else {
 
             // If we weren't moving last frame, then don't udpate the animation (bad implementation)
-            if self.past_movement != dud {
+            if self.past_movement == moov {
                 return;
             }
 
@@ -125,12 +125,27 @@ impl PlayerControllerComponent {
 
         if let ComponentData::PlayerRenderer(pr_component) = &mut state.component_manager.components[renderer_locat.1].component_data {
             
-            if (pr_component.curr_state == state_to_change_to) {
-                return;
+            if pr_component.curr_state != state_to_change_to {
+                pr_component.update_animation(state_to_change_to);
+            }
+            
+            if moov.1 != 0.0 {
+                if moov.1 > 0.0 {
+                    pr_component.update_direction(PlayerDirection::Up);
+                }
+                else {
+                    pr_component.update_direction(PlayerDirection::Down);
+                }
+            }
+            else if moov.0 != 0.0 {
+                if moov.0 > 0.0 {
+                    pr_component.update_direction(PlayerDirection::Right);
+                }
+                else {
+                    pr_component.update_direction(PlayerDirection::Left);
+                }
             }
 
-            pr_component.update_animation(state_to_change_to);
-            
         }
 
     }
