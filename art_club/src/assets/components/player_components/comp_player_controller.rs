@@ -42,7 +42,15 @@ impl PlayerControllerComponent {
 
     pub fn update (&mut self, ent : &mut Entity, state : &mut GameState) {
 
-        self.handle_movement(ent, state);
+        let keyboard = keyboard::get();
+ 
+        if keyboard.key_p().just_pressed() {
+            state.minigame_manager.is_active = true;
+        }
+
+        if !state.is_minigame_active() {
+            self.handle_movement(ent, state);
+        }
 
     }
 
