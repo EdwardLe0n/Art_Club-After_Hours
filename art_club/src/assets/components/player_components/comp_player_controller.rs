@@ -11,8 +11,9 @@ use component_system::component_types::ComponentTypes;
 use component_system::component::ComponentData;
 
 use assets::components::player_components;
-use player_components::comp_player_renderer::PlayerRendererComponent;
 use player_components::player_enums::{PlayerState, PlayerDirection};
+
+use assets::game_state::minigame_manager::Minigames;
 
 pub const PLAYER_SPEED : f32 = 100.0;
 
@@ -45,7 +46,7 @@ impl PlayerControllerComponent {
         let keyboard = keyboard::get();
  
         if keyboard.key_p().just_pressed() {
-            state.minigame_manager.is_active = true;
+            state.start_minigame(Minigames::Crochet);
         }
 
         if !state.is_minigame_active() {
@@ -182,8 +183,8 @@ impl PlayerControllerComponent {
         let player_weight = 1.0 - cam_weight;
 
         camera::set_xy(
-            (camera::x() * cam_weight + (ent.transform.get_x() as f32) * player_weight),
-            (camera::y() * cam_weight + (ent.transform.get_y() as f32) * player_weight)
+            camera::x() * cam_weight + (ent.transform.get_x() as f32) * player_weight,
+            camera::y() * cam_weight + (ent.transform.get_y() as f32) * player_weight
         );
 
     }
