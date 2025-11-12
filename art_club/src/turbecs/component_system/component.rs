@@ -16,7 +16,7 @@ use components::{comp_text_box::TextBoxComponent, comp_butn::ButtonComponent, co
 // User made components
 use crate::assets;
 
-use assets::components::{misc_components, player_components};
+use assets::components::{misc_components, player_components, minigame_components};
 
 use misc_components::{comp_resizer::ResizerComponent, comp_textbox_resizer::TextBoxResizerComponent};
 use misc_components::{comp_text_box_filler::TextBoxFillerComponent};
@@ -25,6 +25,9 @@ use misc_components::{comp_fade::FadeComponent};
 use player_components::comp_player_controller::PlayerControllerComponent;
 use player_components::comp_player_renderer::PlayerRendererComponent;
 use player_components::comp_player_ghost::PlayerGhostComponent;
+
+use minigame_components::comp_minigame_handler::MinigameHandlerComponent;
+use minigame_components::comp_crochet_handler::CrochetHandlerComponent;
 
 #[turbo::serialize]
 #[derive(PartialEq)]
@@ -54,7 +57,9 @@ pub enum ComponentData {
 
     PlayerController (PlayerControllerComponent),
     PlayerRenderer (PlayerRendererComponent),
-    PlayerGhost (PlayerGhostComponent)
+    PlayerGhost (PlayerGhostComponent),
+    MinigameHandler (MinigameHandlerComponent),
+    CrochetHandler (CrochetHandlerComponent)
 }
 
 impl Component {
@@ -201,6 +206,14 @@ impl Component {
             ComponentData::PlayerGhost(pg_component) => {
                 pg_component.update(ent, state);
             },
+
+            ComponentData::MinigameHandler(mh_component) => {
+                mh_component.update(state);
+            },
+
+            ComponentData::CrochetHandler(ch_component) => {
+                ch_component.update(state);
+            }
             
             _default => {}            
         }
@@ -233,6 +246,14 @@ impl Component {
             ComponentData::PlayerRenderer ( plyr_render_component) => {
                 plyr_render_component.render(_transform);
             },
+
+            ComponentData::MinigameHandler( mh_component ) => {
+                mh_component.render(state);
+            },
+
+            ComponentData::CrochetHandler( ch_handler) => {
+                ch_handler.render(state);
+            }
 
             // Space for edge case
 

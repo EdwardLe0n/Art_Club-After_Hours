@@ -35,6 +35,13 @@ impl MinigameManager {
         self.curr_game = some_minigame;
 
     }
+
+    pub fn render_minigame(&self) {
+
+        // log!("rendering!");
+
+    }
+
 }
 
 impl GameState {
@@ -53,10 +60,8 @@ impl GameState {
 
                 // will load everything for the crochet minigame
 
-                self.new_entity_w_comp(&mut minigame_prefabs::new_temp());
-                self.minigame_manager.is_active = false;
-
-                log!("Made new game object");
+                self.new_entity_w_comp(&mut minigame_prefabs::new_crochet_minigame());
+                self.minigame_manager.is_active = true;
 
             }
 

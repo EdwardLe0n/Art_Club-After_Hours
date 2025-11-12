@@ -76,6 +76,8 @@ impl Component {
             ComponentData::PlayerController(_)  => {self.has.has_update = true;},
             ComponentData::PlayerRenderer(_)    => {self.has.has_update = true;},
             ComponentData::PlayerGhost(_)       => {self.has.has_update = true;},
+            ComponentData::MinigameHandler(_)   => {self.has.has_update = true;},
+            ComponentData::CrochetHandler(_)    => {self.has.has_update = true;},
             
             _default => {}
         }
@@ -95,6 +97,8 @@ impl Component {
 
             // Extra functionality
             ComponentData::PlayerRenderer(_)    => {self.has.has_render = true;},
+            ComponentData::MinigameHandler(_)   => {self.has.has_render = true;},
+            ComponentData::CrochetHandler(_)    => {self.has.has_render = true;},
             
             _default => {}
         }
