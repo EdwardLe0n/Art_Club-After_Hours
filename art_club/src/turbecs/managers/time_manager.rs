@@ -1,6 +1,6 @@
 use turbo::*;
 
-static RENDER_TIME : bool = true;
+static RENDER_TIME : bool = false;
 
 #[turbo::serialize]
 #[derive(Copy, PartialEq)]
