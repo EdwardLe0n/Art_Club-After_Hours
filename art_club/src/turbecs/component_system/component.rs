@@ -212,7 +212,7 @@ impl Component {
             },
 
             ComponentData::CrochetHandler(ch_component) => {
-                ch_component.update(state);
+                ch_component.update(ent, state);
             }
             
             _default => {}            
