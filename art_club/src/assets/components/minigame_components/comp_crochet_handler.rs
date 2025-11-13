@@ -38,6 +38,8 @@ pub struct SongGameData {
 
     pub song : String,
     pub delta_time : f32,
+    pub since_last_beat : f32,
+    pub sec_per_beat : f32,
     pub song_state : SongGameState
 
 }
@@ -47,15 +49,23 @@ impl SongGameData {
     pub fn new(some_u32 : u32) -> Self{
 
         let mut some_song = "glorp";
+        let mut some_spb = 60.0;
 
         match some_u32 {
-            0 => {some_song = "glorp";}
+            0 => {
+                some_song = "glorp";
+                some_spb = 120.0
+            }
             _default => {}
         }
+
+        some_spb = 60.0 / some_spb;
 
         return Self { 
             song: some_song.to_string(),
             delta_time: 0.0,
+            since_last_beat : 0.0,
+            sec_per_beat : some_spb,
             song_state: SongGameState::Before 
         };
 
@@ -75,7 +85,8 @@ pub enum CrochetMinigameState {
 #[turbo::serialize]
 #[derive(PartialEq)]
 pub struct CrochetHandlerComponent {
-    mini_state : CrochetMinigameState
+    mini_state : CrochetMinigameState,
+    
 }
 
 impl CrochetHandlerComponent {
@@ -266,6 +277,14 @@ impl CrochetHandlerComponent {
             CrochetMinigameState::Game(game_data) => {
 
                 game_data.delta_time += state.time_manager.delta;
+                game_data.since_last_beat += state.time_manager.delta;
+
+                if game_data.since_last_beat >= game_data.sec_per_beat {
+                    game_data.since_last_beat -= game_data.sec_per_beat;
+
+                    log!("hit a beat");
+
+                }
 
                 match game_data.song_state {
                     
@@ -451,12 +470,36 @@ impl CrochetHandlerComponent {
             fixed = true
         );
 
+        let bar_w = screen().w() as f32 * 0.01;
+        let bar_h = screen().h() as f32 * 0.1;
+
         rect!(
             x = screen().w() as f32 * 0.075,
             y = screen().h() as f32 * 0.2,
-            w = screen().w() as f32 * 0.01,
-            h = screen().h() as f32 * 0.1,
+            w = bar_w,
+            h = bar_h,
             color = 0xffffffff,
+            fixed = true
+        );
+
+        let bump = 1.0 + some_data.sec_per_beat - some_data.since_last_beat;
+        let mut hov_bar_w = (bar_w * bump * 1.1) as i32;
+        let mut hov_bar_h = (bar_h * bump) as i32;
+
+        if hov_bar_w % 2 == 1 {
+            hov_bar_w += 1;
+        }
+
+        if hov_bar_h % 2 == 1{
+            hov_bar_h += 1;
+        }
+
+        rect!(
+            x = screen().w() as f32 * 0.075 - (hov_bar_w as f32 - bar_w) / 2.0,
+            y = screen().h() as f32 * 0.2 - (hov_bar_h as f32 - bar_h) / 2.0,
+            w = hov_bar_w,
+            h = hov_bar_h,
+            color = 0xffffffbb,
             fixed = true
         );
 
