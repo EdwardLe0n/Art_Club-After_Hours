@@ -702,13 +702,23 @@ impl CrochetHandlerComponent {
         match &some_data.song_state {
             SongGameState::Before => {
                 render_text_w_box(
-                "ready?",
-                screen().w() as f32 * 0.2,
-                screen().h() as f32 * 0.5,
-                screen().w() as f32 * 0.6,
-                screen().h() as f32 * 0.05,
-                "large"
-            );
+                    "ready?",
+                    screen().w() as f32 * 0.2,
+                    screen().h() as f32 * 0.5,
+                    screen().w() as f32 * 0.6,
+                    screen().h() as f32 * 0.05,
+                    "large"
+                );
+            },
+            SongGameState::After => {
+                render_text_w_box(
+                    "done!~",
+                    screen().w() as f32 * 0.2,
+                    screen().h() as f32 * 0.5,
+                    screen().w() as f32 * 0.6,
+                    screen().h() as f32 * 0.05,
+                    "large"
+                );
             }
             _default => {}
         }
@@ -748,10 +758,29 @@ impl CrochetHandlerComponent {
         render_text_w_box(
             "good job!~~~",
             screen().w() as f32 * 0.2,
-            screen().h() as f32 * 0.4,
+            screen().h() as f32 * 0.3,
             screen().w() as f32 * 0.6,
             screen().h() as f32 * 0.05,
             "large"
+        );
+
+        let mut some_string = "Results:\n\n".to_string();
+
+        some_string.push_str("Song played : ");
+        some_string.push_str(&some_data.song);
+
+        some_string.push_str("\n");
+        
+        some_string.push_str("Got a total score of : ");
+        some_string.push_str(&(some_data.total_score as i32).to_string());
+
+        render_text_w_box(
+            &some_string,
+            screen().w() as f32 * 0.15,
+            screen().h() as f32 * 0.4,
+            screen().w() as f32 * 0.7,
+            screen().h() as f32 * 0.175,
+            "medium"
         );
 
         render_text_w_box(
