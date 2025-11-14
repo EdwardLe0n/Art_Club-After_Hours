@@ -1,5 +1,7 @@
 // Core directories
 
+use std::collections::VecDeque;
+
 use turbo::*;
 
 use crate::{turbecs, GameState};
@@ -40,7 +42,8 @@ pub struct SongGameData {
     pub delta_time : f32,
     pub since_last_beat : f32,
     pub sec_per_beat : f32,
-    pub song_state : SongGameState
+    pub song_state : SongGameState,
+    pub total_score : f32
 
 }
 
@@ -54,7 +57,7 @@ impl SongGameData {
         match some_u32 {
             0 => {
                 some_song = "glorp";
-                some_spb = 120.0
+                some_spb = 60.0
             }
             _default => {}
         }
@@ -66,7 +69,8 @@ impl SongGameData {
             delta_time: 0.0,
             since_last_beat : 0.0,
             sec_per_beat : some_spb,
-            song_state: SongGameState::Before 
+            song_state: SongGameState::Before,
+            total_score : 0.0
         };
 
     }
@@ -84,15 +88,40 @@ pub enum CrochetMinigameState {
 
 #[turbo::serialize]
 #[derive(PartialEq)]
+pub enum NextButton {
+    A,
+    B,
+    X,
+    Y
+}
+
+impl NextButton {
+
+    pub fn to_string(&self) -> String {
+
+        match self {
+            NextButton::A => {return "A".to_string();}
+            NextButton::B => {return "B".to_string();}
+            NextButton::X => {return "X".to_string();}
+            NextButton::Y => {return "Y".to_string();}
+        }
+
+    }
+
+}
+
+#[turbo::serialize]
+#[derive(PartialEq)]
 pub struct CrochetHandlerComponent {
     mini_state : CrochetMinigameState,
-    
+    next_inputs : VecDeque<NextButton>
 }
 
 impl CrochetHandlerComponent {
     pub fn new() -> Self {
         return Self{
-            mini_state : CrochetMinigameState::Start
+            mini_state : CrochetMinigameState::Start,
+            next_inputs : VecDeque::with_capacity(10)
         };
     }
 }
@@ -100,6 +129,10 @@ impl CrochetHandlerComponent {
 impl CrochetHandlerComponent {
     
     pub fn update(&mut self, ent : &mut Entity, state :&mut GameState) {
+
+        if self.next_inputs.is_empty() {
+            self.init_inputs();
+        }
 
         match &self.mini_state {
             CrochetMinigameState::Start => {
@@ -182,6 +215,36 @@ impl CrochetHandlerComponent {
                 self.render_results();
             },
             _default => {}
+        }
+
+    }
+
+}
+
+impl CrochetHandlerComponent {
+    
+    pub fn init_inputs(&mut self) {
+
+        self.next_inputs.push_back(NextButton::A);
+        self.next_inputs.push_back(NextButton::B);
+        self.next_inputs.push_back(NextButton::X);
+        self.next_inputs.push_back(NextButton::Y);
+        self.next_inputs.push_back(NextButton::A);
+        self.next_inputs.push_back(NextButton::B);
+        self.next_inputs.push_back(NextButton::X);
+        self.next_inputs.push_back(NextButton::Y);
+        self.next_inputs.push_back(NextButton::A);
+        self.next_inputs.push_back(NextButton::B);
+
+    }
+
+    pub fn add_new_input(&mut self) {
+
+        match self.next_inputs[self.next_inputs.len() - 1] {
+            NextButton::A => {self.next_inputs.push_back(NextButton::B);}
+            NextButton::B => {self.next_inputs.push_back(NextButton::X);}
+            NextButton::X => {self.next_inputs.push_back(NextButton::Y);}
+            NextButton::Y => {self.next_inputs.push_back(NextButton::A);}
         }
 
     }
@@ -273,27 +336,98 @@ impl CrochetHandlerComponent {
 
     pub fn update_game(&mut self, state : &mut GameState) {
 
+        let mut did_an_input = false;
+        let mut correct_input = false;
+
+        let mut diff = 0.0;
+        let mut is_early = false;
+
+        let mut percent_correct = 0.0;
+
         match &mut self.mini_state {
             CrochetMinigameState::Game(game_data) => {
+
+                // Handles time updates
 
                 game_data.delta_time += state.time_manager.delta;
                 game_data.since_last_beat += state.time_manager.delta;
 
                 if game_data.since_last_beat >= game_data.sec_per_beat {
                     game_data.since_last_beat -= game_data.sec_per_beat;
+                }
 
-                    log!("hit a beat");
+                diff = game_data.since_last_beat;
+
+                if diff > game_data.sec_per_beat / 2.0 {
+                    is_early = true;
+                    diff = game_data.sec_per_beat - diff;
+                }
+
+                percent_correct = (diff / game_data.sec_per_beat) * 200.0;
+
+                // Input handling section
+
+                if state.input_manager.a.just_pressed() {
+
+                    did_an_input = true;
+
+                    if self.next_inputs.front().unwrap_or(&NextButton::A) == &NextButton::A {
+
+                        correct_input = true;
+
+                    }
 
                 }
+
+                if state.input_manager.b.just_pressed() {
+
+                    did_an_input = true;
+
+                    if self.next_inputs.front().unwrap_or(&NextButton::A) == &NextButton::B {
+
+                        correct_input = true;
+
+                    }
+
+                }
+
+                if state.input_manager.x.just_pressed() {
+
+                    did_an_input = true;
+
+                    if self.next_inputs.front().unwrap_or(&NextButton::A) == &NextButton::X {
+
+                        correct_input = true;
+
+                    }
+
+                }
+
+                if state.input_manager.y.just_pressed() {
+
+                    did_an_input = true;
+
+                    if self.next_inputs.front().unwrap_or(&NextButton::A) == &NextButton::Y {
+
+                        correct_input = true;
+
+                    }
+
+                }
+
+                // Updates the state when needed
 
                 match game_data.song_state {
                     
                     SongGameState::Before => {
 
+                        did_an_input = false;
+
                         if game_data.delta_time >= 2.0 {
 
                             game_data.delta_time = 0.0;
                             game_data.song_state = SongGameState::Playing;
+                            game_data.since_last_beat = 0.0;
 
                             audio::play(&game_data.song);
 
@@ -310,14 +444,26 @@ impl CrochetHandlerComponent {
                             return;
                         }
 
+                        // Updates with the given results
+
+                        if correct_input {
+                            game_data.total_score += 100.0 - percent_correct;
+                        }
+
                     }
 
                     SongGameState::After => {
 
+                        did_an_input = false;
+
                         if game_data.delta_time >= 2.0 {
 
                             game_data.delta_time = 0.0;
+
+                            log!("total score = {}", game_data.total_score as i32);
+
                             self.mini_state = CrochetMinigameState::Results;
+
                             return;
 
                         }
@@ -328,6 +474,31 @@ impl CrochetHandlerComponent {
                 
             }
             _default => {}
+        }
+
+        if !did_an_input {
+            return;
+        }
+
+        // Sanity
+
+        log!("Difference is {}", diff);
+
+        if is_early {
+            log!("early ");
+        }
+
+        log!("Percentile = {}", percent_correct);
+        log!("Score is {}", 100.0 - percent_correct);
+
+        // Correct handler!
+
+        if !correct_input {
+            log!("Incorrect!");
+        }
+        else {
+            self.next_inputs.pop_front();
+            self.add_new_input();
         }
         
     }
@@ -515,6 +686,34 @@ impl CrochetHandlerComponent {
             );
             }
             _default => {}
+        }
+
+        let wh = 15;
+
+        for i in 0..self.next_inputs.len() {
+            
+            let letter = self.next_inputs[i].to_string();
+
+            ellipse!(
+                x = screen().w() as f32 * 0.075 + (i * wh * 2) as f32 + wh as f32,
+                y = screen().h() as f32 * 0.2,
+                w = wh,
+                h = wh,
+                color = 0xaa0000ff,
+                fixed = true
+            );
+
+            text_box!(
+                &letter,
+                font = "large",
+                x = screen().w() as f32 * 0.075 + (i * wh * 2) as f32 + wh as f32,
+                y = screen().h() as f32 * 0.2 + (wh / 4) as f32,
+                w = wh,
+                h = wh,
+                align = "center",
+                fixed = true
+            )
+
         }
 
     }
