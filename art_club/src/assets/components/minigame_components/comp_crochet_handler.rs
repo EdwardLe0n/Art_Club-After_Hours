@@ -79,11 +79,31 @@ impl SongGameData {
 
 #[turbo::serialize]
 #[derive(PartialEq)]
+pub struct SongResultData {
+
+    pub song : String,
+    pub total_score : f32
+
+}
+
+impl SongResultData {
+    
+    pub fn new(some_song : String, some_score : f32) -> Self {
+        return Self { 
+            song: some_song,
+            total_score: some_score
+        };
+    }
+
+}
+
+#[turbo::serialize]
+#[derive(PartialEq)]
 pub enum CrochetMinigameState {
     Start,
     SongSelect(SongSelectData),
     Game(SongGameData),
-    Results
+    Results(SongResultData)
 }
 
 #[turbo::serialize]
@@ -144,7 +164,7 @@ impl CrochetHandlerComponent {
             CrochetMinigameState::Game(_) => {
                 self.update_game(state);
             },
-            CrochetMinigameState::Results => {
+            CrochetMinigameState::Results(_) => {
                 self.update_results(state);
             }
             _default => {}
@@ -211,8 +231,8 @@ impl CrochetHandlerComponent {
             CrochetMinigameState::Game(game_data) => {
                 self.render_game(game_data);
             },
-            CrochetMinigameState::Results => {
-                self.render_results();
+            CrochetMinigameState::Results(game_data) => {
+                self.render_results(game_data);
             },
             _default => {}
         }
@@ -462,7 +482,12 @@ impl CrochetHandlerComponent {
 
                             log!("total score = {}", game_data.total_score as i32);
 
-                            self.mini_state = CrochetMinigameState::Results;
+                            self.mini_state = CrochetMinigameState::Results(
+                                SongResultData::new(
+                                    game_data.song.clone(),
+                                    game_data.total_score.clone()
+                                )
+                            );
 
                             return;
 
@@ -718,7 +743,7 @@ impl CrochetHandlerComponent {
 
     }
 
-    fn render_results(&self) {
+    fn render_results(&self, some_data : &SongResultData) {
 
         render_text_w_box(
             "good job!~~~",
