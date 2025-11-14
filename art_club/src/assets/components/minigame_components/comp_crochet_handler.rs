@@ -43,7 +43,9 @@ pub struct SongGameData {
     pub since_last_beat : f32,
     pub sec_per_beat : f32,
     pub song_state : SongGameState,
-    pub total_score : f32
+    pub total_score : f32,
+    pub inputs : i32,
+    pub correct_inputs : i32,
 
 }
 
@@ -70,7 +72,9 @@ impl SongGameData {
             since_last_beat : 0.0,
             sec_per_beat : some_spb,
             song_state: SongGameState::Before,
-            total_score : 0.0
+            total_score : 0.0,
+            inputs : 0,
+            correct_inputs : 0
         };
 
     }
@@ -82,16 +86,20 @@ impl SongGameData {
 pub struct SongResultData {
 
     pub song : String,
-    pub total_score : f32
+    pub total_score : f32,
+    pub inputs : i32,
+    pub correct_inputs : i32
 
 }
 
 impl SongResultData {
     
-    pub fn new(some_song : String, some_score : f32) -> Self {
+    pub fn new(some_song : String, some_score : f32, some_inputs : i32, some_correct_inputs : i32) -> Self {
         return Self { 
             song: some_song,
-            total_score: some_score
+            total_score: some_score,
+            inputs : some_inputs,
+            correct_inputs : some_correct_inputs
         };
     }
 
@@ -466,7 +474,12 @@ impl CrochetHandlerComponent {
 
                         // Updates with the given results
 
+                        if did_an_input {
+                            game_data.inputs += 1;
+                        }
+
                         if correct_input {
+                            game_data.correct_inputs += 1;
                             game_data.total_score += 100.0 - percent_correct;
                         }
 
@@ -485,7 +498,9 @@ impl CrochetHandlerComponent {
                             self.mini_state = CrochetMinigameState::Results(
                                 SongResultData::new(
                                     game_data.song.clone(),
-                                    game_data.total_score.clone()
+                                    game_data.total_score.clone(),
+                                    game_data.inputs.clone(),
+                                    game_data.correct_inputs.clone()
                                 )
                             );
 
@@ -774,12 +789,22 @@ impl CrochetHandlerComponent {
         some_string.push_str("Got a total score of : ");
         some_string.push_str(&(some_data.total_score as i32).to_string());
 
+        some_string.push_str("\n");
+
+        some_string.push_str("# of inputs : ");
+        some_string.push_str(&(some_data.inputs).to_string());
+
+        some_string.push_str("\n");
+
+        some_string.push_str("# of correct inputs : ");
+        some_string.push_str(&(some_data.correct_inputs).to_string());
+
         render_text_w_box(
             &some_string,
             screen().w() as f32 * 0.15,
             screen().h() as f32 * 0.4,
             screen().w() as f32 * 0.7,
-            screen().h() as f32 * 0.175,
+            screen().h() as f32 * 0.2,
             "medium"
         );
 
