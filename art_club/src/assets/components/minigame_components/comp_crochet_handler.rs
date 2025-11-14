@@ -9,7 +9,7 @@ use crate::{turbecs, GameState};
 use turbecs::managers;
 use turbecs::entity::Entity;
 
-const CURRENT_SONGS : u32 = 3;
+const CURRENT_SONGS : u32 = 2;
 
 #[turbo::serialize]
 #[derive(PartialEq)]
@@ -54,13 +54,17 @@ impl SongGameData {
     pub fn new(some_u32 : u32) -> Self{
 
         let mut some_song = "glorp";
-        let mut some_spb = 60.0;
+        let mut some_spb = 120.0;
 
         match some_u32 {
             0 => {
                 some_song = "glorp";
-                some_spb = 60.0
-            }
+                some_spb = 120.0
+            },
+            1 => {
+                some_song = "what_was_i_meowed_for";
+                some_spb = 130.0
+            },
             _default => {}
         }
 
@@ -320,10 +324,10 @@ impl CrochetHandlerComponent {
                 if state.input_manager.a.just_pressed() {
                     log!("trying to play song");
 
-                    if select.looking_at != 0 {
-                        log!("song not yet implemented!");
-                        return;
-                    }
+                    // if select.looking_at != 0 {
+                    //     log!("song not yet implemented!");
+                    //     return;
+                    // }
 
                     self.mini_state = CrochetMinigameState::Game(SongGameData::new(select.looking_at));
 
@@ -633,7 +637,7 @@ impl CrochetHandlerComponent {
         );
         
         render_text_w_box(
-            "meow.mp3",
+            "Glorps_call.mp3",
             screen().w() as f32 * 0.2,
             screen().h() as f32 * 0.35,
             screen().w() as f32 * 0.6,
@@ -642,18 +646,9 @@ impl CrochetHandlerComponent {
         );
 
         render_text_w_box(
-            "Glorps_call.mp3",
+            "what_was_i_meowed_for.mp3",
             screen().w() as f32 * 0.2,
             screen().h() as f32 * 0.45,
-            screen().w() as f32 * 0.6,
-            screen().h() as f32 * 0.05,
-            "medium"
-        );
-
-        render_text_w_box(
-            "the_faz_call.mp3",
-            screen().w() as f32 * 0.2,
-            screen().h() as f32 * 0.55,
             screen().w() as f32 * 0.6,
             screen().h() as f32 * 0.05,
             "medium"
@@ -804,7 +799,7 @@ impl CrochetHandlerComponent {
             screen().w() as f32 * 0.15,
             screen().h() as f32 * 0.4,
             screen().w() as f32 * 0.7,
-            screen().h() as f32 * 0.2,
+            screen().h() as f32 * 0.25,
             "medium"
         );
 
