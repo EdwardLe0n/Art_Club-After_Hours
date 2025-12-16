@@ -10,6 +10,7 @@ use crate::turbecs::managers;
 use managers::input_system::input_basket::InputBasket;
 
 #[turbo::serialize]
+#[derive(PartialEq)]
 pub enum ExtraData {
     Movement(InputBasket),
     Disconnected,
@@ -50,6 +51,15 @@ impl OnlinePlayerData {
         to_return.curr_dir = some_dir;
         to_return.curr_state = some_state;
         to_return.curr_sprite = some_sprite;
+
+        return to_return;
+
+    }
+
+    pub fn new_disconnect() -> Self {
+        let mut to_return = Self::new();
+
+        to_return.extra = ExtraData::Disconnected;
 
         return to_return;
 
@@ -105,6 +115,9 @@ impl ChannelHandler for UpdatePlayer {
 
         Self::broadcast(HeardOnline::new(user_id.to_string(), data))
 
+    }
+    fn on_disconnect(&mut self, _user_id: &str) -> Result<(), std::io::Error> {
+        Self::broadcast(HeardOnline::new(_user_id.to_string(), OnlinePlayerData::new_disconnect()))
     }
 }
 

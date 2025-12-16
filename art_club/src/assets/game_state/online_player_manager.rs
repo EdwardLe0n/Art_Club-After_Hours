@@ -166,6 +166,13 @@ impl GameState {
                         continue;
                     }
 
+                    // then check if we're dealing with a disconnect
+
+                    if msg.data.extra == ExtraData::Disconnected {
+                        self.entity_manager.lifetime_data.new_destroy.push_back(other_player.locat);
+                        continue;
+                    }
+
                     // then do all le magic
 
                     self.entity_manager.entities[other_player.locat].transform.set_x(msg.data.x);
