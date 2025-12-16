@@ -90,6 +90,46 @@ pub fn new_to_misc() -> (Entity, VecDeque<Component>) {
 
 }
 
+pub fn new_to_lobby() -> (Entity, VecDeque<Component>) {
+
+    let mut ent = Entity::new_base("Play".to_string());
+    let mut ent_queue = VecDeque::new();
+
+    ent.transform.position.nudge_y( -40);
+
+    ent.transform.position.set_vertical_pref(bound_data::Vertical::Bottom);
+
+    let mut button = ButtonComponent::new();
+
+    button.color = 0x000000ff;
+
+    button.border.set_size(2);
+    button.border.set_radius(2);
+    button.border.set_color(0xaaaaaaff);
+
+    button.transform.set_width(100);
+    button.transform.set_height(40);
+
+    button.button_type = ButtonTypes::ToLobby;
+
+    ent_queue.push_back(Component::new(ComponentData::Button(button)));
+
+    let mut text_box = TextBoxComponent::new("Play".to_string());
+
+    text_box.transform.set_height(100);
+    text_box.transform.set_width(100);
+
+    text_box.font = "large".to_string();
+    text_box.color = 0xffffffff;
+
+    ent_queue.push_back(Component::new(ComponentData::TextBox(text_box)));
+
+    ent_queue.push_back(Component::new(ComponentData::TextBoxResizer(TextBoxResizerComponent::new_with_buffers(2, 2))));
+
+    return (ent, ent_queue);
+
+}
+
 pub fn new_to_title() -> (Entity, VecDeque<Component>) {
 
     let mut ent = Entity::new_base("Back".to_string());

@@ -3,6 +3,13 @@
 version = 4
 
 [[package]]
+name = "ArtClub"
+version = "0.1.0"
+dependencies = [
+ "turbo-genesis-sdk",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -292,13 +299,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d99f8c9a7727884afe522e9bd5edbfc91a3312b36a77b5fb8926e4c31a41801"
 
 [[package]]
-name = "turbe"
-version = "0.1.0"
-dependencies = [
- "turbo-genesis-sdk",
-]
-
-[[package]]
 name = "turbo-genesis-abi"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -336,9 +336,9 @@ dependencies = [
 
 [[package]]
 name = "turbo-genesis-sdk"
-version = "5.1.0"
+version = "5.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b26fcb4fe161622e7cff0cb168de90fcc5bc89428941dbf2df9443f69497e1c4"
+checksum = "9e7f299f9fc86fd68191751f24b89552fe5b2e2f30b390664bb7d87037b83b99"
 dependencies = [
  "base64",
  "borsh",

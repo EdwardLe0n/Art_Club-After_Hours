@@ -12,6 +12,7 @@ use managers::input_system::input_basket::InputBasket;
 #[turbo::serialize]
 pub enum ExtraData {
     Movement(InputBasket),
+    Disconnected,
     None
 }
 

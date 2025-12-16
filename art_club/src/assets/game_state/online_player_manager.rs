@@ -2,6 +2,7 @@ use turbo::*;
 
 use std::collections::HashMap;
 
+use crate::turbecs::managers::scene_manager::Scenes;
 use crate::{GameState, turbecs, assets};
 
 use turbecs::component_system::component_types::ComponentTypes;
@@ -62,8 +63,12 @@ impl GameState {
         
         if self.handle_is_connected() {
 
-            self.handle_player_joined();
-            self.handle_update_player();
+            if self.scene_manager.active_scene == Scenes::Lobby {
+
+                self.handle_player_joined();
+                self.handle_update_player();
+
+            }
 
         }
 

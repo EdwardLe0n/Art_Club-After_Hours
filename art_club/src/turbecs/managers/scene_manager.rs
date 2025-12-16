@@ -21,7 +21,8 @@ pub struct SceneManager {
 #[derive(Copy, PartialEq)]
 pub enum Scenes {
     Title,
-    Misc
+    Lobby,
+    Misc,
 }
 
 impl SceneManager {
@@ -50,6 +51,7 @@ pub fn make_scene (some_scene : Scenes) ->  VecDeque<(Entity, VecDeque<Component
 
     match some_scene {
         Scenes::Title => {return make_title_scene()},
+        Scenes::Lobby => {return make_lobby_scene()},
         Scenes::Misc => {return make_misc_scene()},
         _default => {
             return VecDeque::new();
@@ -64,13 +66,25 @@ pub fn make_title_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
 
     ent_vec.push_back(general_prefabs::new_title());
 
-    ent_vec.push_back(general_prefabs::new_to_misc());
+    ent_vec.push_back(general_prefabs::new_to_lobby());
 
     return ent_vec;
 
 }
 
 pub fn make_misc_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
+
+    let mut ent_vec = VecDeque::new();
+
+    ent_vec.push_back(general_prefabs::new_to_title());
+
+    ent_vec.push_back(character_prefabs::new_local_player());
+
+    return ent_vec;
+
+}
+
+pub fn make_lobby_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
 
     let mut ent_vec = VecDeque::new();
 

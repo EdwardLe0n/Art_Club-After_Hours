@@ -1,6 +1,6 @@
-name = "turbe"
+name = "Art Club: After Hours"
 version = "0.1.0"
-description = "A entity component system with lifecycles meant to be pried open and used by developers!"
+description = ""
 authors = ["Edward Leon"]
 
 [canvas]

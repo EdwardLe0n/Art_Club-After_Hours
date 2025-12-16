@@ -24,7 +24,7 @@ use buttons::{scene_loader_buttons, misc_buttons};
 
 // Scene loaders <3
 
-use scene_loader_buttons::{to_misc, to_title};
+use scene_loader_buttons::{to_misc, to_title, to_lobby};
 
 // Custom states to deal with the three main instances
 
@@ -306,6 +306,9 @@ impl ButtonComponent {
             },
             ButtonTypes::Title => {
                 to_title::on_click(self, _ent, _state);
+            },
+            ButtonTypes::ToLobby => {
+                to_lobby::on_click(self, _ent, _state);
             },
 
             _default => {

@@ -6,6 +6,7 @@ pub enum ButtonTypes {
     Default,
 
     Title,
+    ToLobby,
     Misc,
     Test,
 
