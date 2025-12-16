@@ -113,6 +113,7 @@ impl GameState {
                 log!("just received new player info");
 
                 self.make_new_ghost(&msg);
+                self.online_player_manager.should_join = true;
 
             }
 
@@ -170,6 +171,7 @@ impl GameState {
 
                     if msg.data.extra == ExtraData::Disconnected {
                         self.entity_manager.lifetime_data.new_destroy.push_back(other_player.locat);
+                        self.online_player_manager.online_players.remove(&msg.player_id);
                         continue;
                     }
 
