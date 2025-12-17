@@ -170,3 +170,76 @@ pub fn new_to_title() -> (Entity, VecDeque<Component>) {
     return (ent, ent_queue);
 
 }
+
+pub fn new_turbecs_card() -> (Entity, VecDeque<Component>) {
+
+    let mut ent = Entity::new_base("Turbecs".to_string());
+    let mut ent_queue = VecDeque::new();
+
+    ent.set_layer(1);
+
+    ent.transform.position.is_bounded = true;
+    ent.transform.position.bound_data.set_ui_status(true);
+
+    let mut logo = SpriteComponent::new("misc/TurbECS_Logo_mini".to_owned());
+
+    logo.transform.set_width(102);
+    logo.transform.set_height(102);
+
+    logo.transform.nudge_x(-51);
+    logo.transform.nudge_y(51 + 25);
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::Sprite(
+                logo
+            )
+        )
+    );
+
+    let mut text = TextBoxComponent::new("Made with TurbECS".to_owned());
+
+    text.transform.nudge_y(25);
+
+    text.font = "large".to_owned();
+    text.color = 0xffffffff;
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::TextBox(
+                text
+            )
+        )
+    );
+
+    return (ent, ent_queue);
+
+}
+
+pub fn new_background() -> (Entity, VecDeque<Component>) {
+    let mut ent = Entity::new_base("Turbecs".to_string());
+    let mut ent_queue = VecDeque::new();
+
+    ent.transform.position.is_bounded = true;
+    ent.transform.position.bound_data.set_ui_status(true);
+
+    let mut rect = RectangleComponent::new_rect(
+        screen().w() as i32 * 2,
+        screen().h() as i32 * 2,
+        0x000000ff
+    );
+
+    rect.transform.nudge_x(-1 * screen().w() as i32);
+    rect.transform.nudge_y(screen().h() as i32);
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::Rectangle(
+                rect
+            )
+        )
+    );
+
+    return (ent, ent_queue);
+
+}

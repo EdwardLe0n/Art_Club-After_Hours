@@ -20,6 +20,8 @@ pub struct SceneManager {
 #[turbo::serialize]
 #[derive(Copy, PartialEq)]
 pub enum Scenes {
+    DevCards,
+    InputSelection,
     Title,
     Lobby,
     Misc,
@@ -29,7 +31,7 @@ impl SceneManager {
 
     pub fn new() -> Self {
 
-        return Self{active_scene : Scenes::Title, is_loaded : false};
+        return Self{active_scene : Scenes::DevCards, is_loaded : false};
 
     }
 
@@ -50,6 +52,8 @@ pub fn make_scene (some_scene : Scenes) ->  VecDeque<(Entity, VecDeque<Component
     // Then the scene data will be pulled
 
     match some_scene {
+        Scenes::DevCards => {return make_dev_cards_scene();},
+        Scenes::InputSelection => {return make_input_scene();},
         Scenes::Title => {return make_title_scene()},
         Scenes::Lobby => {return make_lobby_scene()},
         Scenes::Misc => {return make_misc_scene()},
@@ -57,6 +61,27 @@ pub fn make_scene (some_scene : Scenes) ->  VecDeque<(Entity, VecDeque<Component
             return VecDeque::new();
         }
     }
+
+}
+
+pub fn make_dev_cards_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
+
+    let mut ent_vec = VecDeque::new();
+
+    ent_vec.push_back(general_prefabs::new_background());
+
+    ent_vec.push_back(general_prefabs::new_turbecs_card());
+
+    return ent_vec;
+
+}
+
+pub fn make_input_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
+
+    let mut ent_vec = VecDeque::new();
+
+
+    return ent_vec;
 
 }
 
@@ -72,7 +97,8 @@ pub fn make_title_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
 
 }
 
-pub fn make_misc_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
+
+pub fn make_lobby_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
 
     let mut ent_vec = VecDeque::new();
 
@@ -84,7 +110,7 @@ pub fn make_misc_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
 
 }
 
-pub fn make_lobby_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
+pub fn make_misc_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
 
     let mut ent_vec = VecDeque::new();
 
