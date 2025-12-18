@@ -226,7 +226,16 @@ impl Component {
     }
 
     pub fn on_destroy(&mut self, state : &mut GameState) {
-        // todo!();
+        
+        match &mut self.component_data {
+
+            ComponentData::CrochetHandler(crochet_handler) => {
+                crochet_handler.destroy(state);
+            },
+            _default => {}
+
+        }
+        
     }
 
     pub fn on_render(&self, _transform : Transform, state : &mut GameState) {

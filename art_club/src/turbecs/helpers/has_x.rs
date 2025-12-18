@@ -110,6 +110,9 @@ impl Component {
     fn init_destroy(&mut self) {
 
         match &self.component_data {
+
+            ComponentData::CrochetHandler(_)    => {self.has.has_destroy = true;}
+
             _default => {}
         }
 

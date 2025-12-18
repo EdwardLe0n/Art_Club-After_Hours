@@ -46,11 +46,13 @@ impl PlayerControllerComponent {
         if state.is_minigame_active() {
             return;
         }
-
-        let keyboard = keyboard::get();
  
-        if keyboard.key_p().just_pressed() {
-            state.start_minigame(Minigames::Crochet);
+        if state.input_manager.select.just_pressed() {
+
+            if !state.is_minigame_active() {
+                state.start_minigame(Minigames::Crochet);
+            }
+
         }
 
         if !state.is_minigame_active() {

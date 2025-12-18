@@ -162,6 +162,12 @@ impl CrochetHandlerComponent {
     
     pub fn update(&mut self, ent : &mut Entity, state :&mut GameState) {
 
+        if state.input_manager.select.just_pressed() {
+
+            state.entity_manager.lifetime_data.new_destroy.push_back(ent.locat);
+
+        }
+
         if self.next_inputs.is_empty() {
             self.init_inputs();
         }
@@ -248,6 +254,12 @@ impl CrochetHandlerComponent {
             },
             _default => {}
         }
+
+    }
+
+    pub fn destroy(&mut self, state :&mut GameState) {
+
+        state.minigame_manager.is_active = false;
 
     }
 
