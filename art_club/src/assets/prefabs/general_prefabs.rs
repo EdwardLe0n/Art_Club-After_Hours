@@ -327,6 +327,20 @@ pub fn new_mouse_notice() -> (Entity, VecDeque<Component>) {
         )
     );
 
+    let mut some_spr = SpriteComponent::new("misc/mouse".to_owned());
+
+    some_spr.transform.nudge_x(-25);
+    some_spr.transform.nudge_y(25);
+
+    some_spr.transform.set_width(50);
+    some_spr.transform.set_height(50);
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::Sprite(some_spr)
+        )
+    );
+
     return (ent, ent_queue);
 
 }
@@ -361,6 +375,20 @@ pub fn new_mobile_notice() -> (Entity, VecDeque<Component>) {
             ComponentData::Button(
                 some_button
             )
+        )
+    );
+
+    let mut some_spr = SpriteComponent::new("misc/hand".to_owned());
+
+    some_spr.transform.nudge_x(-25);
+    some_spr.transform.nudge_y(25);
+
+    some_spr.transform.set_width(50);
+    some_spr.transform.set_height(50);
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::Sprite(some_spr)
         )
     );
 

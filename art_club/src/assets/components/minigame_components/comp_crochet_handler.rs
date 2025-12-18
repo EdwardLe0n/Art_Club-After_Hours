@@ -701,6 +701,16 @@ impl CrochetHandlerComponent {
 
     fn render_game(&self, some_data : &SongGameData) {
 
+        sprite!(
+            "crochet/in_minigame",
+            x = screen().w() as f32 * 0.75,
+            y = screen().h() as f32 * 0.55,
+            w = 50,
+            h = 75,
+            color = 0xffffffff,
+            fixed = true
+        );
+
         rect!(
             x = screen().w() as f32 * -0.05,
             y = screen().h() as f32 * 0.2,
@@ -798,6 +808,16 @@ impl CrochetHandlerComponent {
     }
 
     fn render_results(&self, some_data : &SongResultData) {
+
+        sprite!(
+            "crochet/results",
+            x = screen().w() as f32 * 0.75,
+            y = screen().h() as f32 * 0.55,
+            w = 50,
+            h = 75,
+            color = 0xffffffff,
+            fixed = true
+        );
 
         render_text_w_box(
             "good job!~~~",
