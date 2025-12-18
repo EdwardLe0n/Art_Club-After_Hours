@@ -206,12 +206,12 @@ impl CrochetHandlerComponent {
         // yarn
 
         sprite!(
-            "smile",
+            "crochet/yarn",
             x = screen().w() as f32 * 0.1,
             y = screen().h() as f32 * 0.2,
-            w = screen().w() as f32 * 0.3,
-            h = screen().h() as f32 * 0.3,
-            color = 0xaa1111ff,
+            w = 70,
+            h = 70,
+            color = 0xffffffff,
             fixed = true
         );
 
@@ -229,13 +229,15 @@ impl CrochetHandlerComponent {
 
         // phone
 
+        // log!("x : {} and y : {}", screen().w() as f32 * 0.2, screen().h() as f32 * 0.3);
+
         sprite!(
-            "smile",
+            "crochet/phone",
             x = screen().w() as f32 * 0.75,
             y = screen().h() as f32 * 0.55,
-            w = screen().w() as f32 * 0.2,
-            h = screen().h() as f32 * 0.3,
-            color = 0x111111ff,
+            w = 50,
+            h = 75,
+            color = 0xffffffff,
             fixed = true
         );
 
@@ -580,6 +582,16 @@ impl CrochetHandlerComponent {
     
     fn render_start(&self) {
 
+        sprite!(
+            "crochet/lockScreen",
+            x = screen().w() as f32 * 0.75,
+            y = screen().h() as f32 * 0.55,
+            w = 50,
+            h = 75,
+            color = 0xffffffff,
+            fixed = true
+        );
+
         text_box!(
             "Crochet Beats",
             x = screen().w() as f32 * 0.1,
@@ -622,6 +634,16 @@ impl CrochetHandlerComponent {
     }
 
     fn render_song_select(&self, some_data : &SongSelectData) {
+
+        sprite!(
+            "crochet/sealify",
+            x = screen().w() as f32 * 0.75,
+            y = screen().h() as f32 * 0.55,
+            w = 50,
+            h = 75,
+            color = 0xffffffff,
+            fixed = true
+        );
         
         // handles the selection rectangle
 
