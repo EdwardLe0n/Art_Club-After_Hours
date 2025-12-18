@@ -26,6 +26,10 @@ use buttons::{scene_loader_buttons, misc_buttons};
 
 use scene_loader_buttons::{to_misc, to_title, to_lobby};
 
+// Misc
+
+use misc_buttons::{mobile_on, mouse_on};
+
 // Custom states to deal with the three main instances
 
 #[turbo::serialize]
@@ -309,6 +313,14 @@ impl ButtonComponent {
             },
             ButtonTypes::ToLobby => {
                 to_lobby::on_click(self, _ent, _state);
+            },
+
+            ButtonTypes::MobileOn => {
+                mobile_on::on_click(self, _ent, _state);
+            },
+
+            ButtonTypes::MouseOn => {
+                mouse_on::on_click(self, _ent, _state);
             },
 
             _default => {

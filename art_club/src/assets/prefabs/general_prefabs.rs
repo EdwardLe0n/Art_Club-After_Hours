@@ -24,6 +24,8 @@ use misc_components::{comp_resizer::ResizerComponent, comp_textbox_resizer::Text
 use misc_components::{comp_text_box_filler::TextBoxFillerComponent};
 use misc_components::{comp_fade::FadeComponent};
 
+use misc_components::{comp_logo_fade::{LogoFadeComponent, LogoFade}};
+
 pub fn new_title () -> (Entity, VecDeque<Component>) {
 
     let mut ent = Entity::new_base("Title".to_string());
@@ -212,6 +214,16 @@ pub fn new_turbecs_card() -> (Entity, VecDeque<Component>) {
         )
     );
 
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::LogoFade(
+                LogoFadeComponent::new(
+                    LogoFade::TurbECS
+                )
+            )
+        )
+    );
+
     return (ent, ent_queue);
 
 }
@@ -242,4 +254,170 @@ pub fn new_background() -> (Entity, VecDeque<Component>) {
 
     return (ent, ent_queue);
 
+}
+
+pub fn new_input_notice() -> (Entity, VecDeque<Component>) {
+    let mut ent = Entity::new_base("notice".to_string());
+    let mut ent_queue = VecDeque::new();
+
+    ent.set_layer(1);
+
+    ent.transform.position.is_bounded = true;
+    ent.transform.position.bound_data.set_ui_status(true);
+
+    ent.transform.position.bound_data.set_vertical_pref(bound_data::Vertical::Top);
+
+    let mut text = TextBoxComponent::new("Choose an input type".to_owned());
+
+    text.transform.nudge_y((screen().h() / 4) as i32 * -1);
+
+    text.color = 0xffffffff;
+    text.font = "large".to_owned();
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::TextBox(
+                text
+            )
+        )
+    );
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::TextBoxResizer(
+                TextBoxResizerComponent::new()
+            )
+        )
+    );
+
+    return (ent, ent_queue);
+
+}
+
+pub fn new_mouse_notice() -> (Entity, VecDeque<Component>) {
+    let mut ent = Entity::new_base("notice".to_string());
+    let mut ent_queue = VecDeque::new();
+
+    ent.set_layer(1);
+
+    ent.transform.position.is_bounded = true;
+    ent.transform.position.bound_data.set_ui_status(true);
+
+    let button_width = 50;
+
+    ent.transform.nudge_x(-(screen().w() as i32) / 4);    
+
+    let mut some_button = ButtonComponent::new();
+
+    some_button.transform.set_width(button_width);
+    some_button.transform.set_height(button_width);
+
+    some_button.color = 0x000000ff;
+    some_button.border.set_size(4);
+    some_button.border.set_color(0xffffffff);
+    some_button.border.set_radius(2);
+
+    some_button.button_type = ButtonTypes::MouseOn;
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::Button(
+                some_button
+            )
+        )
+    );
+
+    return (ent, ent_queue);
+
+}
+
+pub fn new_mobile_notice() -> (Entity, VecDeque<Component>) {
+    let mut ent = Entity::new_base("notice".to_string());
+    let mut ent_queue = VecDeque::new();
+
+    ent.set_layer(1);
+
+    ent.transform.position.is_bounded = true;
+    ent.transform.position.bound_data.set_ui_status(true);
+
+    let button_width = 50;
+
+    ent.transform.nudge_x((screen().w() as i32) / 4);    
+
+    let mut some_button = ButtonComponent::new();
+
+    some_button.transform.set_width(button_width);
+    some_button.transform.set_height(button_width);
+
+    some_button.color = 0x000000ff;
+    some_button.border.set_size(4);
+    some_button.border.set_color(0xffffffff);
+    some_button.border.set_radius(2);
+
+    some_button.button_type = ButtonTypes::MobileOn;
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::Button(
+                some_button
+            )
+        )
+    );
+
+    return (ent, ent_queue);
+
+}
+
+pub fn new_from_input_to_title() -> (Entity, VecDeque<Component>) {
+    let mut ent = Entity::new_base("notice".to_string());
+    let mut ent_queue = VecDeque::new();
+
+    ent.set_layer(1);
+
+    ent.transform.position.is_bounded = true;
+    ent.transform.position.bound_data.set_ui_status(true);
+
+    ent.transform.position.bound_data.set_vertical_pref(bound_data::Vertical::Bottom);
+
+    ent.transform.nudge_y((screen().h() / 4) as i32);
+
+    let mut some_button = ButtonComponent::new();
+
+    some_button.color = 0x000000ff;
+    some_button.border.set_size(2);
+    some_button.border.set_color(0xffffffff);
+    some_button.border.set_radius(2);
+
+    some_button.button_type = ButtonTypes::Title;
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::Button(
+                some_button
+            )
+        )
+    );
+
+    let mut text = TextBoxComponent::new("To Title".to_owned());
+
+    text.color = 0xffffffff;
+    text.font = "large".to_owned();
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::TextBox(
+                text
+            )
+        )
+    );
+
+    ent_queue.push_back(
+        Component::new(
+            ComponentData::TextBoxResizer(
+                TextBoxResizerComponent::new()
+            )
+        )
+    );
+
+    return (ent, ent_queue);
 }

@@ -12,6 +12,9 @@ pub enum ButtonTypes {
 
     // User made buttons
 
+    MobileOn,
+    MouseOn,
+
 }
 
 impl ButtonTypes {

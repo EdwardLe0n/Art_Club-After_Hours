@@ -20,7 +20,7 @@ use assets::components::{misc_components, player_components, minigame_components
 
 use misc_components::{comp_resizer::ResizerComponent, comp_textbox_resizer::TextBoxResizerComponent};
 use misc_components::{comp_text_box_filler::TextBoxFillerComponent};
-use misc_components::{comp_fade::FadeComponent};
+use misc_components::{comp_fade::FadeComponent, comp_logo_fade::LogoFadeComponent};
 
 use player_components::comp_player_controller::PlayerControllerComponent;
 use player_components::comp_player_renderer::PlayerRendererComponent;
@@ -54,6 +54,8 @@ pub enum ComponentData {
     TextBoxResizer (TextBoxResizerComponent),
     Fade (FadeComponent),
     TextBoxFiller (TextBoxFillerComponent),
+
+    LogoFade (LogoFadeComponent),
 
     PlayerController (PlayerControllerComponent),
     PlayerRenderer (PlayerRendererComponent),
@@ -193,6 +195,10 @@ impl Component {
 
             ComponentData::Fade(fade_component) => {
                 fade_component.update(ent, state);
+            },
+
+            ComponentData::LogoFade(logo_fade_component) => {
+                logo_fade_component.update(ent, state);
             },
 
             ComponentData::PlayerController(pc_component) => {

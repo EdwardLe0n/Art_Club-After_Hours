@@ -208,10 +208,12 @@ impl Position {
                 
             }
 
+            // TODO: ANNOUNCE CHANGE
+
             match self.get_vertical_pref() {
-                Vertical::Top => {this_bounds = this_bounds.anchor_top(&some_other);},
+                Vertical::Top => {this_bounds = this_bounds.anchor_bottom(&some_other);},
                 Vertical::Center => {this_bounds = this_bounds.anchor_center_y(&some_other);},
-                Vertical::Bottom => {this_bounds = this_bounds.anchor_bottom(&some_other);},
+                Vertical::Bottom => {this_bounds = this_bounds.anchor_top(&some_other);},
             }
 
             result -= this_bounds.y();

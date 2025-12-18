@@ -80,6 +80,13 @@ pub fn make_input_scene() -> VecDeque<(Entity, VecDeque<Component>)> {
 
     let mut ent_vec = VecDeque::new();
 
+    ent_vec.push_back(general_prefabs::new_background());
+
+    ent_vec.push_back(general_prefabs::new_input_notice());
+    ent_vec.push_back(general_prefabs::new_mouse_notice());
+    ent_vec.push_back(general_prefabs::new_mobile_notice());
+
+    ent_vec.push_back(general_prefabs::new_from_input_to_title());
 
     return ent_vec;
 

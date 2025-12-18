@@ -41,15 +41,9 @@ impl TextBoxResizerComponent {
     pub fn on_awake (&mut self, ent : &mut Entity, state : &mut GameState) {
 
         let locat_text = ent.find_component_in_state(ComponentTypes::TextBox, state);
-        let locat_button = ent.find_component_in_state(ComponentTypes::Button, state);
 
         if !locat_text.0 {
             log!("No text box!");
-            return;
-        }
-
-        if !locat_button.0 {
-            log!("No button!");
             return;
         }
 
@@ -71,6 +65,15 @@ impl TextBoxResizerComponent {
                 text_box.transform.set_width(screen().w() as i32 * 8 / 10);
             }
 
+        }
+
+        let locat_button = ent.find_component_in_state(ComponentTypes::Button, state);
+
+        if !locat_button.0 {
+            // Sanity
+            // log!("No button!");
+            
+            return;
         }
 
         if let ComponentData::Button(button) = &mut state.component_manager.components[locat_button.1].component_data {
